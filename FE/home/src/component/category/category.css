@@ -1,0 +1,7 @@
+@import "tailwindcss";
+button{
+    @apply text-gray-600
+}
+.active{
+    @apply text-blue-700;
+}
