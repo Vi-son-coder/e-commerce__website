@@ -3,6 +3,10 @@ import { ListCategory } from "../component/category/category";
 import ContainerContent from "../component/ContainerContent/containerContent";
 import Product from "../component/products/products";
 import pic from "../assets/Galaxy-A50-Mat-truoc-3.jpg";
+import { CategoryBtnInContent } from "../component/category/category";
+import { handleClick } from "../component/Act/Act";
+import { useState } from "react";
+
 function ContainerHeader({
   bgCategory,
   bgDeal,
@@ -51,6 +55,8 @@ function Content() {
       ),
     },
   };
+
+  const [selectCate, setSelectCate] = useState("Xu hướng tuần này");
 
   return (
     <>
@@ -154,11 +160,39 @@ function Content() {
         </ul>
       </ContainerContent>
       <ContainerContent>
-        <div className="flex justify-between">
-          <div>
+        <div className="flex justify-between bg-[#F2F3FF] p-3 rounded-[9px] items-center">
+          <div className="flex items-center gap-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="size-9 p-2 bg-[#8A4CFC] text-white rounded-[8px]"
+            >
+              <path d="m10.852 14.772-.383.923" />
+              <path d="m10.852 9.228-.383-.923" />
+              <path d="m13.148 14.772.382.924" />
+              <path d="m13.531 8.305-.383.923" />
+              <path d="m14.772 10.852.923-.383" />
+              <path d="m14.772 13.148.923.383" />
+              <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 0 0-5.63-1.446 3 3 0 0 0-.368 1.571 4 4 0 0 0-2.525 5.771" />
+              <path d="M17.998 5.125a4 4 0 0 1 2.525 5.771" />
+              <path d="M19.505 10.294a4 4 0 0 1-1.5 7.706" />
+              <path d="M4.032 17.483A4 4 0 0 0 11.464 20c.18-.311.892-.311 1.072 0a4 4 0 0 0 7.432-2.516" />
+              <path d="M4.5 10.291A4 4 0 0 0 6 18" />
+              <path d="M6.002 5.125a3 3 0 0 0 .4 1.375" />
+              <path d="m9.228 10.852-.923-.383" />
+              <path d="m9.228 13.148-.923.383" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
             <div>
-              <p>Gợi ý thông minh AI</p>
-              <span>
+              <p className="font-bold text-[17px]">Gợi ý thông minh AI</p>
+              <span className="text-[12px] text-[#787983]">
                 Phân tích hành vi duyệt gần đây: Danh mục "Tai nghe & Phụ kiện
                 cao cấp
               </span>
@@ -166,12 +200,12 @@ function Content() {
           </div>
           <button>
             {
-              <div className="flex gap-1">
+              <div className="flex gap-1 items-center bg-white p-2 rounded-[8px]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  className="size-6"
+                  className="size-3 text-[#8A4CFC]"
                 >
                   <path
                     fillRule="evenodd"
@@ -179,12 +213,12 @@ function Content() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Làm mới gợi ý</span>
+                <span className="text-[12px]">Làm mới gợi ý</span>
               </div>
             }
           </button>
         </div>
-        <div className="grid gap-4 grid-rows-[repeat(auto-fill,minmax(250px,1fr))] grid-cols-6">
+        <div className="flex overflow-auto gap-4">
           <Product
             percen={"-21"}
             pic={pic}
@@ -194,36 +228,18 @@ function Content() {
             sold={"3.5k"}
             priceSale={"7.690.000"}
             price={"9.700.00"}
+            textColorPriceSale='#004AC6'
           />
           <Product
             percen={"-21"}
             pic={pic}
             brand={"Samsung"}
-            name={"Điện thoại A50"}
+            name={"Điện thoại A50 promax 256gb vỏ titan tự nhiên"}
             avergeRating={"4.9"}
             sold={"3.5k"}
             priceSale={"7.690.000"}
             price={"9.700.00"}
-          />
-          <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
-          />
-          <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
+            textColorPriceSale='#004AC6'
           />
           <Product
             percen={"-21"}
@@ -234,8 +250,38 @@ function Content() {
             sold={"3.5k"}
             priceSale={"7.690.000"}
             price={"9.700.00"}
+            textColorPriceSale='#004AC6'
           />
-           <Product
+        </div>
+      </ContainerContent>
+      <ContainerContent>
+        <div>
+          <div>
+            <p>Xu hướng & Bán chạy</p>
+          </div>
+          <div>
+            <CategoryBtnInContent
+              selectTab={selectCate}
+              active={() => handleClick(setSelectCate("Xu hướng tuần này"))}
+            >
+              Xu hướng tuần này
+            </CategoryBtnInContent>
+            <CategoryBtnInContent
+              selectTab={selectCate}
+              active={() => handleClick(setSelectCate("Bán chạy nhất"))}
+            >
+             Bán chạy nhất
+            </CategoryBtnInContent>
+            <CategoryBtnInContent
+              selectTab={selectCate}
+              active={() => handleClick(setSelectCate("Hàng mới về"))}
+            >
+              Hàng mới về
+            </CategoryBtnInContent>
+          </div>
+        </div>
+        <div>
+          <Product
             percen={"-21"}
             pic={pic}
             brand={"Samsung"}
@@ -243,27 +289,6 @@ function Content() {
             avergeRating={"4.9"}
             sold={"3.5k"}
             priceSale={"7.690.000"}
-            price={"9.700.00"}
-          />
-           <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
-          />
-           <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
           />
         </div>
       </ContainerContent>

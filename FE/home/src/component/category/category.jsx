@@ -20,4 +20,13 @@ function ListCategory({icon,title}){
     )
 }
 
-export {ListOnHeader, ListCategory} ;
+function CategoryBtnInContent({children,active,selectTab}){
+    const isActive = selectTab === children
+    return (
+        <>
+        <button onClick={active} className={`cursor-pointer text-[12px] font-medium p-[3px_20px] rounded-2xl bg-[#EAEDFF] w-fit ${isActive?"activeCategoryBtnInContent":undefined}`}>{children}</button>
+        </>
+    )
+}
+
+export {ListOnHeader, ListCategory,CategoryBtnInContent} ;

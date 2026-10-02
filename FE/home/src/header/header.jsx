@@ -1,6 +1,8 @@
 import {ListOnHeader} from "../component/category/category";
 import Pic from "../assets/nova-logo-mark.webp.jpg";
 import { useState } from "react";
+import { handleClick } from "../component/Act/Act";
+
 function TopBar({ children }) {
   return (
     <>
@@ -25,9 +27,7 @@ function Header() {
 
   const [selectTab, setSelectTab] = useState("Tất cả danh mục");
 
-  function handleClick(category) {
-    setSelectTab(category);
-  }
+  
   return (
     <>
       <div className="flex p-[6px_80px_6px_80px] justify-between bg-[#F2F3FF]">
@@ -159,10 +159,9 @@ function Header() {
           <ul className="flex gap-7 ">
             {listCategory.map((category) => (
               <li key={category}>
-                {" "}
                 <ListOnHeader
                   selectTab={selectTab}
-                  active={() => handleClick(category)}
+                  active={() => handleClick(setSelectTab(category))}
                 >
                   {category}
                 </ListOnHeader>

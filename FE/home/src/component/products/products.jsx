@@ -1,3 +1,5 @@
+import "./products.css";
+
 function Product({
   percen,
   pic,
@@ -7,16 +9,31 @@ function Product({
   sold,
   priceSale,
   price,
+  colorBgVoucher,
+  voucher,
+  colorTextVoucher,
+  textColorPrice,
+  textColorPriceSale,
 }) {
   return (
-    <div className="bg-[#FAF8FF] p-3 w-fit rounded-xl shrink-0">
+    <div className="bg-[#FAF8FF] p-3 w-fit rounded-xl shrink-0 max-w-[200px]">
       <div className="relative">
         <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`${percen}%`}</p>
-        <img src={pic} alt="" className="object-cover w-50 h-50 rounded-xl" />
+        <img
+          src={pic}
+          alt=""
+          className="object-cover w-50 h-50 rounded-[15px]"
+        />
       </div>
       <p className="text-[#787983] text-sm">{brand}</p>
-      <p className="text-[20px] font-medium">{name}</p>
-      <p className="flex items-center gap-1 text-[12px] mt-4">
+      <p className="text-[20px] font-medium line-clamp-1">{name}</p>
+      <p
+        className="rounded-sm w-fit p-[0_9px] text-[12px] mt-4"
+        style={{ backgroundColor: colorBgVoucher, color: colorTextVoucher }}
+      >
+        {voucher}
+      </p>
+      <p className="flex items-center gap-1 text-[12px] ">
         {
           <>
             <svg
@@ -32,8 +49,14 @@ function Product({
       </p>
       <div className="flex justify-between items-center">
         <div>
-          <p className="text-[#004AC6] font-bold text-xl">{`${priceSale}đ`}</p>
-          <p className="line-through text-[#a4a6b3] text-[13px]">{`${price}đ`}</p>
+          <p
+            style={{ color: textColorPriceSale }}
+            className=" font-bold text-xl"
+          >{`${priceSale}đ`}</p>
+          <p
+            style={{ color: textColorPrice }}
+            className="line-through text-[#a4a6b3] text-[13px]"
+          >{`${price ? price + "đ" : " "}`}</p>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
