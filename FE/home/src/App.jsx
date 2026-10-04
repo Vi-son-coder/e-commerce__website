@@ -2,13 +2,14 @@
 import './App.css'
 import Header from './header/header'
 import Content from './content/content'
+import Footer from './footer/footer'
 function App() {
 
   return (
     <>
     <Header />
     <div className='p-[0px_50px]'><Content /></div>
-    {/* <Footer /> */}
+    <Footer />
     </>
   )
 }

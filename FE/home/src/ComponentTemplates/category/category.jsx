@@ -1,0 +1,42 @@
+import "./category.css";
+
+function ListOnHeader({ children, active, selectTab }) {
+  const isActive = selectTab === children;
+  return (
+    <>
+      <button
+        onClick={active}
+        className={`${isActive ? "active" : undefined} cursor-pointer text-sm font-medium`}
+      >
+        {children}
+      </button>
+    </>
+  );
+}
+
+function ListCategory({ icon, title }) {
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <div className="bg-[#F2F3FF] w-15 h-15 flex justify-center items-center rounded-[50%] text-[#004AC6]">
+        {icon}
+      </div>
+      <p className="text-sm font-medium">{title}</p>
+    </div>
+  );
+}
+
+function CategoryBtnInContent({ children, active, selectTab }) {
+  const isActive = selectTab === children;
+  return (
+    <>
+      <button
+        onClick={active}
+        className={`cursor-pointer text-[12px] font-medium p-[3px_20px] rounded-2xl bg-[#EAEDFF] w-fit ${isActive ? "activeCategoryBtnInContent" : undefined}`}
+      >
+        {children}
+      </button>
+    </>
+  );
+}
+
+export { ListOnHeader, ListCategory, CategoryBtnInContent };

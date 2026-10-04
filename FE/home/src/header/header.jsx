@@ -1,7 +1,10 @@
-import {ListOnHeader} from "../component/category/category";
+
 import Pic from "../assets/nova-logo-mark.webp.jpg";
 import { useState } from "react";
-import { handleClick } from "../component/Act/Act";
+import { ListOnHeader } from "../ComponentTemplates/category/category";
+import { handleClick } from "../ComponentTemplates/Act/Act";
+import { listCategory } from "../Data/data";
+
 
 function TopBar({ children }) {
   return (
@@ -14,16 +17,7 @@ function TopBar({ children }) {
 }
 
 function Header() {
-  let listCategory = [
-    "Tất cả danh mục",
-    "Điện tử",
-    "Điện thoại",
-    "Máy tính & Laptop",
-    "Thời trang",
-    "Làm đẹp & Sức khỏe",
-    "Gia dụng",
-    "Thể thao & Dã ngoại",
-  ];
+
 
   const [selectTab, setSelectTab] = useState("Tất cả danh mục");
 
@@ -69,7 +63,7 @@ function Header() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth={1.5}
+                  strokeWidth={2.5}
                   stroke="currentColor"
                   className="size-5 text-gray-500"
                 >
@@ -100,7 +94,7 @@ function Header() {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth={1.5}
+                      strokeWidth={2}
                       stroke="currentColor"
                       className="size-6"
                     >
@@ -122,7 +116,7 @@ function Header() {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
-                      strokeWidth={1.5}
+                      strokeWidth={2}
                       stroke="currentColor"
                       className="size-5 text-blue-700"
                     >

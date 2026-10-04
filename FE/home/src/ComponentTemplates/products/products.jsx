@@ -9,27 +9,28 @@ function Product({
   sold,
   priceSale,
   price,
-  colorBgVoucher,
+  bgVoucherColor,
   voucher,
-  colorTextVoucher,
+  textVoucherColor,
   textColorPrice,
   textColorPriceSale,
+  bgColor
 }) {
   return (
-    <div className="bg-[#FAF8FF] p-3 w-fit rounded-xl shrink-0 max-w-[200px]">
+    <div style={{background:bgColor}} className="flex flex-col p-3 w-fit rounded-xl shrink-0 max-w-[180px] gap-1">
       <div className="relative">
         <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`${percen}%`}</p>
         <img
           src={pic}
           alt=""
-          className="object-cover w-50 h-50 rounded-[15px]"
+          className="object-cover rounded-[15px] aspect-square border-1 border-[#efefef8a]"
         />
       </div>
       <p className="text-[#787983] text-sm">{brand}</p>
-      <p className="text-[20px] font-medium line-clamp-1">{name}</p>
+      <p className="text-[20px] font-medium line-clamp-2 flex-1">{name}</p>
       <p
-        className="rounded-sm w-fit p-[0_9px] text-[12px] mt-4"
-        style={{ backgroundColor: colorBgVoucher, color: colorTextVoucher }}
+        className="rounded-sm font-medium w-fit p-[0_9px] text-[11px] mt-4"
+        style={{ backgroundColor:  bgVoucherColor, color: textVoucherColor }}
       >
         {voucher}
       </p>
@@ -55,7 +56,7 @@ function Product({
           >{`${priceSale}đ`}</p>
           <p
             style={{ color: textColorPrice }}
-            className="line-through text-[#a4a6b3] text-[13px]"
+            className="line-through text-[13px]"
           >{`${price ? price + "đ" : " "}`}</p>
         </div>
         <svg

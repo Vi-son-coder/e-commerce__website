@@ -1,11 +1,17 @@
 import "./content.css";
-import { ListCategory } from "../component/category/category";
-import ContainerContent from "../component/ContainerContent/containerContent";
-import Product from "../component/products/products";
+import { ListCategory } from "../ComponentTemplates/category/category";
+import ContainerContent from "../ComponentTemplates/ContainerContent/containerContent";
+import Product from "../ComponentTemplates/products/products";
 import pic from "../assets/Galaxy-A50-Mat-truoc-3.jpg";
-import { CategoryBtnInContent } from "../component/category/category";
-import { handleClick } from "../component/Act/Act";
-import { useState } from "react";
+import BrandContainer from "../ComponentTemplates/brand/brand";
+import logo from "../assets/logo-dior.png";
+import BottomContentContainer from "../ComponentTemplates/BottomContentContainer/BottomContentContainer";
+
+import TitleOfAIRecomment from "../CustomComponent/TitleContainerContent/TitleOfAIRecomment/TitleOfAIRecomment";
+import TitleOfTrendind from "../CustomComponent/TitleContainerContent/TitleOfTrendind/TitleOfTrendind";
+import TitleOfBrand from "../CustomComponent/TitleContainerContent/TitleOfBrand/TitleOfBrand";
+import TitleOfSuggestion from "../CustomComponent/TitleContainerContent/TitleOfSuggestion/TitleOfSuggestion";
+import TitleOfCategory from "../CustomComponent/TitleContainerContent/TitleOfCategory/TitleOfCategory";
 
 function ContainerHeader({
   bgCategory,
@@ -55,8 +61,6 @@ function Content() {
       ),
     },
   };
-
-  const [selectCate, setSelectCate] = useState("Xu hướng tuần này");
 
   return (
     <>
@@ -139,85 +143,20 @@ function Content() {
         </div>
       </div>
       <ContainerContent>
-        <div className="flex justify-between">
-          <div className="flex gap-1 items-center">
-            <div className="w-2 h-6 rounded-2xl bg-[#004AC6]"></div>
-            <p className="font-bold text-xl">Khám phá danh mục</p>
-          </div>
-          <button className="!text-[#004AC6] font-medium text-sm">
-            {"Xem tất cả>"}
-          </button>
+        <TitleOfCategory />
+        <div className="flex overflow-auto gap-20">
+          <ListCategory
+            title={category["Điện thoại"].title}
+            icon={category["Điện thoại"].icon}
+          />
+          <ListCategory
+            title={category["Điện thoại"].title}
+            icon={category["Điện thoại"].icon}
+          />
         </div>
-        <ul className="flex justify-around">
-          <ListCategory
-            title={category["Điện thoại"].title}
-            icon={category["Điện thoại"].icon}
-          />
-          <ListCategory
-            title={category["Điện thoại"].title}
-            icon={category["Điện thoại"].icon}
-          />
-        </ul>
       </ContainerContent>
       <ContainerContent>
-        <div className="flex justify-between bg-[#F2F3FF] p-3 rounded-[9px] items-center">
-          <div className="flex items-center gap-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="size-9 p-2 bg-[#8A4CFC] text-white rounded-[8px]"
-            >
-              <path d="m10.852 14.772-.383.923" />
-              <path d="m10.852 9.228-.383-.923" />
-              <path d="m13.148 14.772.382.924" />
-              <path d="m13.531 8.305-.383.923" />
-              <path d="m14.772 10.852.923-.383" />
-              <path d="m14.772 13.148.923.383" />
-              <path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 0 0-5.63-1.446 3 3 0 0 0-.368 1.571 4 4 0 0 0-2.525 5.771" />
-              <path d="M17.998 5.125a4 4 0 0 1 2.525 5.771" />
-              <path d="M19.505 10.294a4 4 0 0 1-1.5 7.706" />
-              <path d="M4.032 17.483A4 4 0 0 0 11.464 20c.18-.311.892-.311 1.072 0a4 4 0 0 0 7.432-2.516" />
-              <path d="M4.5 10.291A4 4 0 0 0 6 18" />
-              <path d="M6.002 5.125a3 3 0 0 0 .4 1.375" />
-              <path d="m9.228 10.852-.923-.383" />
-              <path d="m9.228 13.148-.923.383" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-            <div>
-              <p className="font-bold text-[17px]">Gợi ý thông minh AI</p>
-              <span className="text-[12px] text-[#787983]">
-                Phân tích hành vi duyệt gần đây: Danh mục "Tai nghe & Phụ kiện
-                cao cấp
-              </span>
-            </div>
-          </div>
-          <button>
-            {
-              <div className="flex gap-1 items-center bg-white p-2 rounded-[8px]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="size-3 text-[#8A4CFC]"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4.755 10.059a7.5 7.5 0 0 1 12.548-3.364l1.903 1.903h-3.183a.75.75 0 1 0 0 1.5h4.992a.75.75 0 0 0 .75-.75V4.356a.75.75 0 0 0-1.5 0v3.18l-1.9-1.9A9 9 0 0 0 3.306 9.67a.75.75 0 1 0 1.45.388Zm15.408 3.352a.75.75 0 0 0-.919.53 7.5 7.5 0 0 1-12.548 3.364l-1.902-1.903h3.183a.75.75 0 0 0 0-1.5H2.984a.75.75 0 0 0-.75.75v4.992a.75.75 0 0 0 1.5 0v-3.18l1.9 1.9a9 9 0 0 0 15.059-4.035.75.75 0 0 0-.53-.918Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-[12px]">Làm mới gợi ý</span>
-              </div>
-            }
-          </button>
-        </div>
+        <TitleOfAIRecomment />
         <div className="flex overflow-auto gap-4">
           <Product
             percen={"-21"}
@@ -228,59 +167,15 @@ function Content() {
             sold={"3.5k"}
             priceSale={"7.690.000"}
             price={"9.700.00"}
-            textColorPriceSale='#004AC6'
-          />
-          <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50 promax 256gb vỏ titan tự nhiên"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
-            textColorPriceSale='#004AC6'
-          />
-          <Product
-            percen={"-21"}
-            pic={pic}
-            brand={"Samsung"}
-            name={"Điện thoại A50"}
-            avergeRating={"4.9"}
-            sold={"3.5k"}
-            priceSale={"7.690.000"}
-            price={"9.700.00"}
-            textColorPriceSale='#004AC6'
+            textColorPriceSale="#004AC6"
+            textColorPrice="#a4a6b3"
+            bgColor="#FAF8FF"
           />
         </div>
       </ContainerContent>
       <ContainerContent>
-        <div>
-          <div>
-            <p>Xu hướng & Bán chạy</p>
-          </div>
-          <div>
-            <CategoryBtnInContent
-              selectTab={selectCate}
-              active={() => handleClick(setSelectCate("Xu hướng tuần này"))}
-            >
-              Xu hướng tuần này
-            </CategoryBtnInContent>
-            <CategoryBtnInContent
-              selectTab={selectCate}
-              active={() => handleClick(setSelectCate("Bán chạy nhất"))}
-            >
-             Bán chạy nhất
-            </CategoryBtnInContent>
-            <CategoryBtnInContent
-              selectTab={selectCate}
-              active={() => handleClick(setSelectCate("Hàng mới về"))}
-            >
-              Hàng mới về
-            </CategoryBtnInContent>
-          </div>
-        </div>
-        <div>
+        <TitleOfTrendind />
+        <div className="flex gap-4 overflow-auto ">
           <Product
             percen={"-21"}
             pic={pic}
@@ -289,9 +184,163 @@ function Content() {
             avergeRating={"4.9"}
             sold={"3.5k"}
             priceSale={"7.690.000"}
+            bgColor="#FAF8FF"
+          />
+          <Product
+            percen={"-21"}
+            pic={pic}
+            brand={"Samsung"}
+            name={"Điện thoại A50"}
+            avergeRating={"4.9"}
+            sold={"3.5k"}
+            priceSale={"7.690.000"}
+            bgColor="#FAF8FF"
           />
         </div>
       </ContainerContent>
+      <ContainerContent>
+        <TitleOfBrand />
+        <div className="flex gap-4 overflow-auto ">
+          <BrandContainer
+            logo={logo}
+            name={"Dior"}
+            follower={"1,8M"}
+            voucher={"Voucher đến 1,5Tr"}
+          />
+        </div>
+      </ContainerContent>
+      <div className="w p-5 rounded-2xl mt-7 gap-5 flex flex-col">
+        <TitleOfSuggestion />
+        <div className="gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+          <Product
+            percen={"-21"}
+            pic={pic}
+            brand={"Samsung"}
+            name={"Điện thoại A50"}
+            avergeRating={"4.9"}
+            sold={"3.5k"}
+            priceSale={"7.690.000"}
+            price={"9.700.00"}
+            bgColor="white"
+            voucher={"Freeship Extra"}
+            bgVoucherColor="#6FFBBE"
+            textVoucherColor="black"
+            textColorPriceSale="#004AC6"
+            textColorPrice="#a4a6b3"
+          />
+        </div>
+        <div className="flex justify-center ">
+          <div className=" flex items-center gap-2 bg-white p-[10px_40px] rounded-[7px]">
+            <button className="cursor-pointer text-[15px] font-bold !text-[#004AC6]">
+              Xem thêm sản phẩm gợi ý
+            </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-3 text-[#004AC6]"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white flex p-5 rounded-2xl justify-between">
+        <BottomContentContainer
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
+              />
+            </svg>
+          }
+          iconColor="#004AC6"
+          iconBgColor="#DBE1FF"
+          title={"100% Chính hãng"}
+          desc={"Cam kết bồi hoàn 200% nếu phát hiện giả"}
+        />
+        <BottomContentContainer
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+              />
+            </svg>
+          }
+          iconColor="#006242"
+          iconBgColor="#6FFBBE"
+          title={"Giao Hỏa Tốc 2H"}
+          desc={"Áp dụng nội thành Hà Nội & TP.HCM"}
+        />
+        <BottomContentContainer
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+              />
+            </svg>
+          }
+          iconColor="#712AE2"
+          iconBgColor="#EADDFF"
+          title={"Đổi trả 30 Ngày"}
+          desc={"Thủ tục nhanh chóng ngay tại nhà"}
+        />
+        <BottomContentContainer
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              className="size-6"
+            >
+              <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+              <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+              <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+            </svg>
+          }
+          iconColor="#131B2E"
+          iconBgColor="#E2E7FF"
+          title={"Hỗ Trợ 24/7 AI & CSKH"}
+          desc={"Tư vấn thông minh & chuyên viên tận tâm"}
+        />
+      </div>
     </>
   );
 }
