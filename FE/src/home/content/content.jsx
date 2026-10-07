@@ -1,17 +1,16 @@
 import "./content.css";
-import { ListCategory } from "../ComponentTemplates/category/category";
-import ContainerContent from "../ComponentTemplates/ContainerContent/containerContent";
-import Product from "../ComponentTemplates/products/products";
-import pic from "../assets/Galaxy-A50-Mat-truoc-3.jpg";
-import BrandContainer from "../ComponentTemplates/brand/brand";
-import logo from "../assets/logo-dior.png";
-import BottomContentContainer from "../ComponentTemplates/BottomContentContainer/BottomContentContainer";
-
-import TitleOfAIRecomment from "../CustomComponent/TitleContainerContent/TitleOfAIRecomment/TitleOfAIRecomment";
-import TitleOfTrendind from "../CustomComponent/TitleContainerContent/TitleOfTrendind/TitleOfTrendind";
-import TitleOfBrand from "../CustomComponent/TitleContainerContent/TitleOfBrand/TitleOfBrand";
-import TitleOfSuggestion from "../CustomComponent/TitleContainerContent/TitleOfSuggestion/TitleOfSuggestion";
-import TitleOfCategory from "../CustomComponent/TitleContainerContent/TitleOfCategory/TitleOfCategory";
+import { ListCategory } from "../../ComponentTemplates/category/category";
+import ContainerContent from "../../ComponentTemplates/ContainerContent/containerContent";
+import Product from "../../ComponentTemplates/products/products";
+import BrandContainer from "../../ComponentTemplates/brand/brand";
+import BottomContentContainer from "../../ComponentTemplates/BottomContentContainer/BottomContentContainer";
+import pic from "../../assets/Galaxy-A50-Mat-truoc-3.jpg";
+import logo from "../../assets/logo-dior.png";
+import TitleOfAIRecomment from "../../CustomComponent/TitleContainerContent/TitleOfAIRecomment/TitleOfAIRecomment";
+import TitleOfTrendind from "../../CustomComponent/TitleContainerContent/TitleOfTrendind/TitleOfTrendind";
+import TitleOfBrand from "../../CustomComponent/TitleContainerContent/TitleOfBrand/TitleOfBrand";
+import TitleOfSuggestion from "../../CustomComponent/TitleContainerContent/TitleOfSuggestion/TitleOfSuggestion";
+import TitleOfCategory from "../../CustomComponent/TitleContainerContent/TitleOfCategory/TitleOfCategory";
 
 function ContainerHeader({
   bgCategory,
@@ -159,6 +158,7 @@ function Content() {
         <TitleOfAIRecomment />
         <div className="flex overflow-auto gap-4">
           <Product
+            id={1}
             percen={"-21"}
             pic={pic}
             brand={"Samsung"}
@@ -167,7 +167,7 @@ function Content() {
             sold={"3.5k"}
             priceSale={"7.690.000"}
             price={"9.700.00"}
-            textColorPriceSale="#004AC6"
+            textColorPriceSale="#BA1A1A"
             textColorPrice="#a4a6b3"
             bgColor="#FAF8FF"
           />
@@ -225,7 +225,7 @@ function Content() {
             voucher={"Freeship Extra"}
             bgVoucherColor="#6FFBBE"
             textVoucherColor="black"
-            textColorPriceSale="#004AC6"
+            textColorPriceSale="#BA1A1A"
             textColorPrice="#a4a6b3"
           />
         </div>

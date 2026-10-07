@@ -1,7 +1,7 @@
-import { CustomerCareColumn } from "../CustomComponent/CustomerCareColumn/CustomerCareColumn";
-import { AboutColumn } from "../CustomComponent/AboutColumn/AboutColumn";
-import { NewsletterColumn } from "../CustomComponent/NewsletterColumn/NewsletterColumn";
-import { PaymentShippingColumn } from "../CustomComponent/PaymentShippingColumn/PaymentShippingColumn";
+import { CustomerCareColumn } from "../../CustomComponent/CustomerCareColumn/CustomerCareColumn";
+import { AboutColumn } from "../../CustomComponent/AboutColumn/AboutColumn";
+import { NewsletterColumn } from "../../CustomComponent/NewsletterColumn/NewsletterColumn";
+import { PaymentShippingColumn } from "../../CustomComponent/PaymentShippingColumn/PaymentShippingColumn";
 
 function Footer() {
   return (

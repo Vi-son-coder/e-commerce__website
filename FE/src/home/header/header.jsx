@@ -1,9 +1,10 @@
 
-import Pic from "../assets/nova-logo-mark.webp.jpg";
+import Pic from "../../assets/nova-logo-mark.webp.jpg";
 import { useState } from "react";
-import { ListOnHeader } from "../ComponentTemplates/category/category";
-import { handleClick } from "../ComponentTemplates/Act/Act";
-import { listCategory } from "../Data/data";
+import { ListOnHeader } from "../../ComponentTemplates/category/category";
+import { handleClick } from "../../ComponentTemplates/Act/Act";
+import { listCategory } from "../../Data/data";
+import { Link } from "react-router-dom";
 
 
 function TopBar({ children }) {
@@ -44,6 +45,7 @@ function Header() {
       </div>
       <div className="!bg-white shadow">
         <div className="flex p-[20px_80px] justify-between">
+          <Link to='/' >
           <div className="flex gap-3 items-center mr-20">
             <img src={Pic} alt="" className="size-11 rounded-xl" />
             <div>
@@ -51,6 +53,7 @@ function Header() {
               <p className="text-sm text-gray-800">Sàn Thương Mại Thông Minh</p>
             </div>
           </div>
+          </Link>
           <form className="flex-1 mr-10 flex bg-[#F2F3FF] p-[4px_8px] rounded-xl">
             <div className="flex items-center w-full">
               <select name="" id="" className="bg-white p-2 rounded-xl mr-2">
@@ -80,9 +83,11 @@ function Header() {
                   className="p-3 focus:outline-none w-full"
                 />
               </div>
+              <Link to='../../Search/pages/SearchResultPage'>
               <button className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm">
                 Tìm
               </button>
+              </Link>
             </div>
           </form>
           <div className="flex">
