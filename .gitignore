@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment
+.env
+**/.env
+
+# Build
+dist/
+build/
+**/dist/
+**/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Prisma
+prisma/generated/
+generated/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/

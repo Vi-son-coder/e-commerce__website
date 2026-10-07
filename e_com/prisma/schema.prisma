@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlserver"
+}
+
+model AI_MODEL {
+  model_id                Int                       @id(map: "PK_AI_MODEL") @default(autoincrement())
+  model_name              String                    @db.VarChar(100)
+  version                 Int
+  algorithm               String                    @db.VarChar(100)
+  trained_date            DateTime?
+  status                  String                    @default("active", map: "DF__AI_MODEL__status__4AB81AF0") @db.VarChar(255)
+  DATA_TRAINING           DATA_TRAINING[]
+  PRODUCT_RECOMMENDATIONS PRODUCT_RECOMMENDATIONS[]
+}
+
+model CHITIETDONHANG {
+  order_detail_id Int     @id(map: "PK_CHITIETDONHANG") @default(autoincrement())
+  order_id        Int
+  product_id      Int
+  quantity        Int
+  price           Decimal @db.Decimal(12, 2)
+  DONHANG         DONHANG @relation(fields: [order_id], references: [order_id], onUpdate: NoAction, map: "FK_CHITIETDONHANG_DONHANG")
+  SANPHAM         SANPHAM @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_CHITIETDONHANG_SANPHAM")
+
+  @@unique([order_id, product_id], map: "UQ_ORDER_PRODUCT")
+  @@index([order_id], map: "IX_CHITIET_ORDER")
+  @@index([product_id], map: "IX_CHITIET_PRODUCT")
+}
+
+model DANHMUC {
+  category_id   Int       @id(map: "PK_DANHMUC") @default(autoincrement())
+  category_name String    @unique(map: "UQ_DANHMUC_NAME") @db.VarChar(255)
+  description   String?   @db.VarChar(255)
+  SANPHAM       SANPHAM[]
+}
+
+model DATA_TRAINING {
+  training_id   Int           @id(map: "PK_DATA_TRAINING") @default(autoincrement())
+  model_id      Int
+  user_id       Int
+  product_id    Int
+  behavior_id   Int
+  create_date   DateTime      @default(now(), map: "DF__DATA_TRAI__creat__6E01572D")
+  USER_BEHAVIER USER_BEHAVIER @relation(fields: [behavior_id], references: [behavior_id], onUpdate: NoAction, map: "FK_TRAINING_BEHAVIOR")
+  AI_MODEL      AI_MODEL      @relation(fields: [model_id], references: [model_id], onUpdate: NoAction, map: "FK_TRAINING_MODEL")
+  SANPHAM       SANPHAM       @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_TRAINING_PRODUCT")
+  KHACHHANG     KHACHHANG     @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_TRAINING_USER")
+
+  @@index([behavior_id], map: "IX_TRAINING_BEHAVIOR")
+  @@index([model_id], map: "IX_TRAINING_MODEL")
+  @@index([product_id], map: "IX_TRAINING_PRODUCT")
+  @@index([user_id], map: "IX_TRAINING_USER")
+}
+
+model DONHANG {
+  order_id         Int              @id(map: "PK_DONHANG") @default(autoincrement())
+  user_id          Int
+  order_date       DateTime         @default(now(), map: "DF__DONHANG__order_d__619B8048")
+  shipping_address String           @db.VarChar(255)
+  total_amount     Decimal          @default(0, map: "DF__DONHANG__total_a__628FA481") @db.Decimal(12, 2)
+  CHITIETDONHANG   CHITIETDONHANG[]
+  KHACHHANG        KHACHHANG        @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_DONHANG_KHACHHANG")
+  THANHTOAN        THANHTOAN?
+
+  @@index([order_date], map: "IX_DONHANG_DATE")
+  @@index([user_id], map: "IX_DONHANG_USER")
+}
+
+model KHACHHANG {
+  user_id                 Int                       @id(map: "PK_KHACHHANG") @default(autoincrement())
+  username                String                    @unique(map: "UQ_KHACHHANG_USERNAME") @db.VarChar(255)
+  password                String                    @db.VarChar(255)
+  email                   String                    @unique(map: "UQ_KHACHHANG_EMAIL") @db.VarChar(255)
+  full_name               String?                   @db.VarChar(255)
+  phone                   String?                   @db.VarChar(20)
+  address                 String?                   @db.VarChar(255)
+  DATA_TRAINING           DATA_TRAINING[]
+  DONHANG                 DONHANG[]
+  PRODUCT_RECOMMENDATIONS PRODUCT_RECOMMENDATIONS[]
+  USER_BEHAVIER           USER_BEHAVIER[]
+}
+
+model PRODUCT_RECOMMENDATIONS {
+  recommendation_id Int       @id(map: "PK_PRODUCT_RECOMMENDATIONS") @default(autoincrement())
+  user_id           Int
+  product_id        Int
+  model_id          Int
+  score             Decimal   @db.Decimal(10, 4)
+  recommended_at    DateTime  @default(now(), map: "DF__PRODUCT_R__recom__6754599E")
+  AI_MODEL          AI_MODEL  @relation(fields: [model_id], references: [model_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_MODEL")
+  SANPHAM           SANPHAM   @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_PRODUCT")
+  KHACHHANG         KHACHHANG @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_USER")
+
+  @@index([model_id], map: "IX_RECOMMENDATION_MODEL")
+  @@index([product_id], map: "IX_RECOMMENDATION_PRODUCT")
+  @@index([user_id], map: "IX_RECOMMENDATION_USER")
+}
+
+model SANPHAM {
+  product_id              Int                       @id(map: "PK_SANPHAM") @default(autoincrement())
+  product_name            String                    @db.VarChar(255)
+  description             String?                   @db.VarChar(255)
+  price                   Decimal                   @db.Decimal(12, 2)
+  quantity                Int                       @default(0, map: "DF__SANPHAM__quantit__5535A963")
+  image                   String?                   @db.VarChar(255)
+  status                  String                    @default("active", map: "DF__SANPHAM__status__5629CD9C") @db.VarChar(255)
+  category_id             Int
+  CHITIETDONHANG          CHITIETDONHANG[]
+  DATA_TRAINING           DATA_TRAINING[]
+  PRODUCT_RECOMMENDATIONS PRODUCT_RECOMMENDATIONS[]
+  DANHMUC                 DANHMUC                   @relation(fields: [category_id], references: [category_id], onUpdate: NoAction, map: "FK_SANPHAM_DANHMUC")
+  USER_BEHAVIER           USER_BEHAVIER[]
+
+  @@index([category_id], map: "IX_SANPHAM_CATEGORY")
+}
+
+model THANHTOAN {
+  payment_id   Int      @id(map: "PK_THANHTOAN") @default(autoincrement())
+  order_id     Int      @unique(map: "UQ_THANHTOAN_ORDER")
+  payment_date DateTime @default(now(), map: "DF__THANHTOAN__payme__7C4F7684")
+  DONHANG      DONHANG  @relation(fields: [order_id], references: [order_id], onUpdate: NoAction, map: "FK_THANHTOAN_DONHANG")
+}
+
+model USER_BEHAVIER {
+  behavior_id   Int             @id(map: "PK_USER_BEHAVIER") @default(autoincrement())
+  user_id       Int
+  product_id    Int
+  behavior_type String          @db.VarChar(255)
+  behavior_time DateTime        @default(now(), map: "DF__USER_BEHA__behav__5BE2A6F2")
+  duration      Int?
+  DATA_TRAINING DATA_TRAINING[]
+  SANPHAM       SANPHAM         @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_BEHAVIOR_PRODUCT")
+  KHACHHANG     KHACHHANG       @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_BEHAVIOR_USER")
+
+  @@index([product_id], map: "IX_BEHAVIOR_PRODUCT")
+  @@index([behavior_time], map: "IX_BEHAVIOR_TIME")
+  @@index([user_id], map: "IX_BEHAVIOR_USER")
+}
