@@ -1,11 +1,9 @@
-
 import Pic from "../../assets/nova-logo-mark.webp.jpg";
 import { useState } from "react";
 import { ListOnHeader } from "../../ComponentTemplates/category/category";
 import { handleClick } from "../../ComponentTemplates/Act/Act";
 import { listCategory } from "../../Data/data";
 import { Link } from "react-router-dom";
-
 
 function TopBar({ children }) {
   return (
@@ -18,11 +16,8 @@ function TopBar({ children }) {
 }
 
 function Header() {
-
-
   const [selectTab, setSelectTab] = useState("Tất cả danh mục");
-
-  
+  const [inputValue, setInputValue] = useState("");
   return (
     <>
       <div className="flex p-[6px_80px_6px_80px] justify-between bg-[#F2F3FF]">
@@ -33,7 +28,9 @@ function Header() {
         </ul>
         <ul className="flex gap-5">
           <TopBar>Trợ giúp & CSKH</TopBar>
-          <TopBar>Tra cứu đơn hàng</TopBar>
+          <Link to="/OrderTrackingPage">
+            <TopBar>Tra cứu đơn hàng</TopBar>
+          </Link>
           <TopBar>Thông báo</TopBar>
           <p className="flex whitespace-pre">
             <TopBar>VN</TopBar> / <TopBar>VND</TopBar>
@@ -45,14 +42,16 @@ function Header() {
       </div>
       <div className="!bg-white shadow">
         <div className="flex p-[20px_80px] justify-between">
-          <Link to='/' >
-          <div className="flex gap-3 items-center mr-20">
-            <img src={Pic} alt="" className="size-11 rounded-xl" />
-            <div>
-              <p className="text-2xl font-bold text-blue-700">NovaMark</p>
-              <p className="text-sm text-gray-800">Sàn Thương Mại Thông Minh</p>
+          <Link to="/">
+            <div className="flex gap-3 items-center mr-20">
+              <img src={Pic} alt="" className="size-11 rounded-xl" />
+              <div>
+                <p className="text-2xl font-bold text-blue-700">NovaMark</p>
+                <p className="text-sm text-gray-800">
+                  Sàn Thương Mại Thông Minh
+                </p>
+              </div>
             </div>
-          </div>
           </Link>
           <form className="flex-1 mr-10 flex bg-[#F2F3FF] p-[4px_8px] rounded-xl">
             <div className="flex items-center w-full">
@@ -76,17 +75,18 @@ function Header() {
                     d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
                   />
                 </svg>
-  
+
                 <input
                   type="text"
                   placeholder="Tìm kiếm điện tử, thương hiệu, hoặc deal công nghệ cao cấp"
                   className="p-3 focus:outline-none w-full"
+                  onChange={({ target }) => setInputValue(target.value)}
                 />
               </div>
-              <Link to='../../Search/pages/SearchResultPage'>
-              <button className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm">
-                Tìm
-              </button>
+              <Link to={`SearchResultPage?searchKeyword=${inputValue}`}>
+                <button className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm">
+                  Tìm
+                </button>
               </Link>
             </div>
           </form>
@@ -115,32 +115,34 @@ function Header() {
                   </div>
                   <p>Yêu thích</p>
                 </div>
-                <div className="flex gap-2 items-center bg-[#F2F3FF] p-[4px_16px] rounded-xl">
-                  <div className="flex relative">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                      stroke="currentColor"
-                      className="size-5 text-blue-700"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-                      />
-                    </svg>
-                    <p className="bg-violet-400 absolute text-white w-[15px] text-center text-[8px] p-[1px_3px] rounded-[50px] top-[-20%] left-[50%]">
-                      4
-                    </p>
+                <Link to="CartPage">
+                  <div className="flex gap-2 items-center bg-[#F2F3FF] p-[4px_16px] rounded-xl">
+                    <div className="flex relative">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="size-5 text-blue-700"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                        />
+                      </svg>
+                      <p className="bg-violet-400 absolute text-white w-[15px] text-center text-[8px] p-[1px_3px] rounded-[50px] top-[-20%] left-[50%]">
+                        4
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-gray-700">Giỏ hàng</p>
+                      <strong>0đ</strong>
+                    </div>
                   </div>
-  
-                  <div>
-                    <p className="text-gray-700">Giỏ hàng</p>
-                    <strong>0đ</strong>
-                  </div>
-                </div>
+                </Link>
               </div>
             </div>
             <div className="flex items-center gap-1">

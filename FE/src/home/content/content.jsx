@@ -159,7 +159,7 @@ function Content() {
         <div className="flex overflow-auto gap-4">
           <Product
             id={1}
-            percen={"-21"}
+            discount={"21"}
             pic={pic}
             brand={"Samsung"}
             name={"Điện thoại A50"}
@@ -177,7 +177,7 @@ function Content() {
         <TitleOfTrendind />
         <div className="flex gap-4 overflow-auto ">
           <Product
-            percen={"-21"}
+            discount={"21"}
             pic={pic}
             brand={"Samsung"}
             name={"Điện thoại A50"}
@@ -187,7 +187,7 @@ function Content() {
             bgColor="#FAF8FF"
           />
           <Product
-            percen={"-21"}
+            discount={"21"}
             pic={pic}
             brand={"Samsung"}
             name={"Điện thoại A50"}
@@ -213,7 +213,7 @@ function Content() {
         <TitleOfSuggestion />
         <div className="gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
           <Product
-            percen={"-21"}
+            discount={"21"}
             pic={pic}
             brand={"Samsung"}
             name={"Điện thoại A50"}

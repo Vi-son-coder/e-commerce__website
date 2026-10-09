@@ -3,7 +3,7 @@ import "./products.css";
 
 function Product({
   id,
-  percen,
+  discount,
   pic,
   brand,
   name,
@@ -19,13 +19,13 @@ function Product({
   bgColor,
 }) {
   return (
-    <Link to={`/ProductDetailPage/pages/ProductDetailPage/${id}`}>
+    <Link to={`/ProductDetailPage?productId=${id}`}>
       <div
         style={{ background: bgColor }}
         className="flex flex-col p-3 w-fit rounded-xl shrink-0 max-w-[180px] gap-1"
       >
         <div className="relative">
-          <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`${percen}%`}</p>
+          <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`-${discount}%`}</p>
           <img
             src={pic}
             alt=""

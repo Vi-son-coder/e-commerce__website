@@ -3,19 +3,20 @@ import FilterChips from "../components/FilterChips";
 import SidebarFilter from "../components/SidebarFilter";
 import SortBar from "../components/SortBar";
 import Product from "../../ComponentTemplates/products/products";
-import { mockProducts } from "../../Data/data";
+import { useSearchParams } from "react-router-dom";
+import search from "../../ComponentTemplates/Act/Search";
 
 export default function SearchResultPage() {
+  const [searchParams] = useSearchParams()
+  const searchKeyword = searchParams.get("searchKeyword");
+  const searchProducts = search(searchKeyword);
   return (
     <div className="bg-gray-100 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-4">
         <Breadcrumb />
 
         <h1 className="text-xl font-bold text-gray-800 my-2">
-          Kết quả tìm kiếm cho "bàn phím cơ không dây"
-          <span className="text-sm font-normal text-gray-500 ml-2">
-            Tìm thấy 1.248 kết quả
-          </span>
+          {`Kết quả tìm kiếm cho "${searchKeyword}"`}
         </h1>
 
         <FilterChips />
@@ -30,10 +31,11 @@ export default function SearchResultPage() {
 
             {/* Product Grid */}
             <div className="gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
-              {mockProducts.map(({ id, ...product }) => (
+              {searchProducts.map(({ id, ...product }) => (
                 <Product
                   key={id}
                   {...product}
+                  id={id}
                   bgColor="white"
                   textColorPriceSale="#BA1A1A"
                   textColorPrice="#a4a6b3"

@@ -33,7 +33,7 @@ export default function SidebarFilter() {
           <span>-</span>
           <input type="text" placeholder="3.500.000" className="w-full border rounded p-1 text-center" />
         </div>
-        <button className="w-full bg-blue-600 text-white py-1.5 rounded font-medium hover:bg-blue-700">
+        <button className="w-full bg-blue-600 !text-white py-1.5 rounded font-medium hover:bg-blue-700">
           Áp dụng khoảng giá
         </button>
       </div>

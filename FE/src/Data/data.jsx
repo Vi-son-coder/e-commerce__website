@@ -14,7 +14,7 @@
   const mockProducts = [
     {
       id: 1,
-      percen:20,
+      discount:20,
       name: "Bàn Phím Cơ Không Dây Keychron K3...",
       brand: "Keychron",
       priceSale: '2.190.000',
@@ -24,5 +24,17 @@
       pic: pic,
       voucher:'Freeship Xtra toàn quốc'
     },
+    {
+       id: 2,
+      discount:20,
+      name: "Điện thoại Keychron K3...",
+      brand: "Keychron",
+      priceSale: '2.190.000',
+      price: '2.750.000',
+      avergeRating: 4.9,
+      sold: "1.2k",
+      pic: pic,
+      voucher:'Freeship Xtra toàn quốc'
+    }
   ]
   export {listCategory,mockProducts}

@@ -24,6 +24,7 @@ export default function RelatedProductsList() {
           <Product
             key={product.id}
             {...product}
+            id={product.id}
             bgColor="#F2F3FF"
             textColorPriceSale="#BA1A1A"
             textColorPrice="#a4a6b3"

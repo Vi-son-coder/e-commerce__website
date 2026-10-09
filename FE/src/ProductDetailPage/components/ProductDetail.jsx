@@ -53,7 +53,7 @@ export default function ProductDetail({product}){
                   {product.price}đ
                 </span>
                 <span className="bg-red-700 text-white text-xs px-2 py-0.5 rounded font-bold">
-                  -{product.percen}%
+                  -{product.discount}%
                 </span>
               </div>
               <div className="flex flex-col gap-2">

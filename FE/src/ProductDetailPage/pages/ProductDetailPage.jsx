@@ -1,10 +1,11 @@
 import RelatedProductsList from "../components/RelatedProductsList";
 import { mockProducts } from "../../Data/data";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import ProductDetail from "../components/ProductDetail";
 
 export default function ProductDetailPage() {
-  const {id} = useParams();
+  const [searchParams] = useSearchParams();
+  const id = searchParams.get('productId');
   const product = mockProducts.find((p) => String(p.id) == String(id));
   return (
     <div className="min-h-screen bg-gray-100 p-4 md:p-6 font-sans">
