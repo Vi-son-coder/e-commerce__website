@@ -1,0 +1,11 @@
+@import "tailwindcss";
+button{
+    @apply text-gray-600
+}
+.active{
+    @apply !text-blue-700;
+}
+
+.activeCategoryBtnInContent{
+    @apply !bg-[#004AC6] !text-white
+}

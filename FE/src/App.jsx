@@ -1,14 +1,15 @@
 import "./App.css";
-import Content from "./home/content/content";
+import Content from "./pages/home/content/content";
 
 import { Route, Routes } from "react-router-dom";
 import MainLayout from "./MainLayout";
-import SearchResultPage from "./Search/pages/SearchResultPage";
-import ProductDetailPage from "./ProductDetailPage/pages/ProductDetailPage";
-import CartPage from "./ShoppingCart/pages/CartPage";
-import PaymentPage from "./Payment/pages/PaymentPage";
-import ConfirmPaymentPage from "./ConfirmPayment/pages/ConfirmPaymentPage";
-import OrderTrackingPage from "./OrderTracking/page/OrderTrackingPage";
+import SearchResultPage from "./pages/Search/pages/SearchResultPage";
+import ProductDetailPage from "./pages/ProductDetailPage/pages/ProductDetailPage";
+import CartPage from "./pages/ShoppingCart/pages/CartPage";
+import PaymentPage from "./pages/Payment/pages/PaymentPage";
+import ConfirmPaymentPage from "./pages/ConfirmPayment/pages/ConfirmPaymentPage";
+import OrderTrackingPage from "./pages/OrderTracking/page/OrderTrackingPage";
+import ProductPage from "./pages/ProductPage/ProductPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="PaymentPage" element={<PaymentPage />} />
           <Route path="ConfirmPaymentPage" element={<ConfirmPaymentPage />} />
           <Route path="OrderTrackingPage" element={<OrderTrackingPage />} />
+          <Route path="products" element={<ProductPage />} />
         </Route>
         <Route
           path={"*"}
