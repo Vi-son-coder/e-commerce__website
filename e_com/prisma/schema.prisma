@@ -1,10 +1,11 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "sqlserver"
+  provider = "postgresql"
 }
 
 model AI_MODEL {
@@ -13,7 +14,7 @@ model AI_MODEL {
   version                 Int
   algorithm               String                    @db.VarChar(100)
   trained_date            DateTime?
-  status                  String                    @default("active", map: "DF__AI_MODEL__status__4AB81AF0") @db.VarChar(255)
+  status                  String                    @default("active") @db.VarChar(255)
   DATA_TRAINING           DATA_TRAINING[]
   PRODUCT_RECOMMENDATIONS PRODUCT_RECOMMENDATIONS[]
 }
@@ -45,7 +46,7 @@ model DATA_TRAINING {
   user_id       Int
   product_id    Int
   behavior_id   Int
-  create_date   DateTime      @default(now(), map: "DF__DATA_TRAI__creat__6E01572D")
+  create_date   DateTime      @default(now())
   USER_BEHAVIER USER_BEHAVIER @relation(fields: [behavior_id], references: [behavior_id], onUpdate: NoAction, map: "FK_TRAINING_BEHAVIOR")
   AI_MODEL      AI_MODEL      @relation(fields: [model_id], references: [model_id], onUpdate: NoAction, map: "FK_TRAINING_MODEL")
   SANPHAM       SANPHAM       @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_TRAINING_PRODUCT")
@@ -60,9 +61,9 @@ model DATA_TRAINING {
 model DONHANG {
   order_id         Int              @id(map: "PK_DONHANG") @default(autoincrement())
   user_id          Int
-  order_date       DateTime         @default(now(), map: "DF__DONHANG__order_d__619B8048")
+  order_date       DateTime         @default(now())
   shipping_address String           @db.VarChar(255)
-  total_amount     Decimal          @default(0, map: "DF__DONHANG__total_a__628FA481") @db.Decimal(12, 2)
+  total_amount     Decimal          @default(0) @db.Decimal(12, 2)
   CHITIETDONHANG   CHITIETDONHANG[]
   KHACHHANG        KHACHHANG        @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_DONHANG_KHACHHANG")
   THANHTOAN        THANHTOAN?
@@ -91,7 +92,7 @@ model PRODUCT_RECOMMENDATIONS {
   product_id        Int
   model_id          Int
   score             Decimal   @db.Decimal(10, 4)
-  recommended_at    DateTime  @default(now(), map: "DF__PRODUCT_R__recom__6754599E")
+  recommended_at    DateTime  @default(now())
   AI_MODEL          AI_MODEL  @relation(fields: [model_id], references: [model_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_MODEL")
   SANPHAM           SANPHAM   @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_PRODUCT")
   KHACHHANG         KHACHHANG @relation(fields: [user_id], references: [user_id], onUpdate: NoAction, map: "FK_RECOMMENDATION_USER")
@@ -106,9 +107,9 @@ model SANPHAM {
   product_name            String                    @db.VarChar(255)
   description             String?                   @db.VarChar(255)
   price                   Decimal                   @db.Decimal(12, 2)
-  quantity                Int                       @default(0, map: "DF__SANPHAM__quantit__5535A963")
+  quantity                Int                       @default(0)
   image                   String?                   @db.VarChar(255)
-  status                  String                    @default("active", map: "DF__SANPHAM__status__5629CD9C") @db.VarChar(255)
+  status                  String                    @default("active") @db.VarChar(255)
   category_id             Int
   CHITIETDONHANG          CHITIETDONHANG[]
   DATA_TRAINING           DATA_TRAINING[]
@@ -122,7 +123,7 @@ model SANPHAM {
 model THANHTOAN {
   payment_id   Int      @id(map: "PK_THANHTOAN") @default(autoincrement())
   order_id     Int      @unique(map: "UQ_THANHTOAN_ORDER")
-  payment_date DateTime @default(now(), map: "DF__THANHTOAN__payme__7C4F7684")
+  payment_date DateTime @default(now())
   DONHANG      DONHANG  @relation(fields: [order_id], references: [order_id], onUpdate: NoAction, map: "FK_THANHTOAN_DONHANG")
 }
 
@@ -131,7 +132,7 @@ model USER_BEHAVIER {
   user_id       Int
   product_id    Int
   behavior_type String          @db.VarChar(255)
-  behavior_time DateTime        @default(now(), map: "DF__USER_BEHA__behav__5BE2A6F2")
+  behavior_time DateTime        @default(now())
   duration      Int?
   DATA_TRAINING DATA_TRAINING[]
   SANPHAM       SANPHAM         @relation(fields: [product_id], references: [product_id], onUpdate: NoAction, map: "FK_BEHAVIOR_PRODUCT")

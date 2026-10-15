@@ -1,21 +1,20 @@
+
 import "dotenv/config";
-import { PrismaClient } from "../generated/prisma/client.ts";
-import { PrismaMssql } from "@prisma/adapter-mssql";
+import { PrismaClient } from "../generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-const adapter = new PrismaMssql({
-server: process.env.DB_SERVER,
-port: Number(process.env.DB_PORT),
-database: process.env.DB_NAME,
-user: process.env.DB_USER,
-password: process.env.DB_PASSWORD,
+const connectionString = process.env.DATABASE_URL;
 
-options: {
-    encrypt: true,
-    trustServerCertificate: true
+if (!connectionString) {
+  throw new Error("DATABASE_URL chưa được cấu hình trong file .env");
 }
 
+const adapter = new PrismaPg({
+  connectionString,
 });
 
 export const prisma = new PrismaClient({
-adapter
+  adapter,
 });
+
+export default prisma;
