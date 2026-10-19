@@ -7,7 +7,7 @@ export function useProducts(data = null) {
  
   useEffect(() => {
     async function getProducts() {
-      const Data = await request({ reqPATH: PATH, data:data });
+      const Data = await request({ reqPATH: PATH, data:data }).then(res => res.json());
       setProducts(Data);
     }
     getProducts();
@@ -15,3 +15,4 @@ export function useProducts(data = null) {
 
   return { products };
 }
+

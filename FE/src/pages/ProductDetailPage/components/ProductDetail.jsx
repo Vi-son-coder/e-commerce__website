@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useAddToCart } from "../../../hooks/useAddToCart";
+import { useState, useRef } from "react";
+import { addToCart } from "../../../services/cart.service";
+import NotificationAddToCart from "./NotificationAddToCart";
 
 export default function ProductDetail({ product }) {
   const newPrice = (
@@ -8,7 +9,36 @@ export default function ProductDetail({ product }) {
   ).toFixed(0);
 
   const [quantityClick, setQuantityClick] = useState(1);
-  const { setProductId, setQuantity } = useAddToCart();
+
+  const [notification, setNotification] = useState({
+    show: false,
+    message: "",
+    status: false,
+  });
+  let timeoutRef = useRef(null);
+
+  async function handleAddToCartAlert(productId, quantity) {
+    let res = await addToCart(productId, quantity);
+    console.log(res);
+    if (res.data && res.ok) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setNotification({
+        show: true,
+        message: "Thêm vào giỏ hàng",
+        status: res.ok,
+      });
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setNotification({ show: true, message: "Thất bại", status: res.ok });
+    }
+    timeoutRef.current = setTimeout(() => {
+      setNotification({ show: false, message: "" });
+    }, 2000);
+  }
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-6">
       {/* Cột trái: Gallery Ảnh */}
@@ -103,14 +133,14 @@ export default function ProductDetail({ product }) {
                     ? quantityClick
                     : setQuantityClick(quantityClick - 1)
                 }
-                className="bg-white w-8 h-8 rounded-[7px] font-black"
+                className="bg-white active:bg-[#d4d4d4d2] w-8 h-8 rounded-[7px] font-black"
               >
                 -
               </button>
               <span className="font-semibold">{quantityClick}</span>
               <button
                 onClick={() => setQuantityClick(quantityClick + 1)}
-                className="bg-white w-8 h-8 rounded-[7px] font-black"
+                className="bg-white active:bg-[#d4d4d4d2] w-8 h-8 rounded-[7px] font-black"
               >
                 +
               </button>
@@ -125,8 +155,7 @@ export default function ProductDetail({ product }) {
         <div className="flex gap-3 pt-4 border-t">
           <button
             onClick={() => {
-              setProductId(product?._id);
-              setQuantity(quantityClick);
+              handleAddToCartAlert(product?._id, quantityClick);
             }}
             className="flex-1 py-3 border border-blue-600 text-blue-600 font-medium rounded-xl hover:bg-blue-50"
           >
@@ -137,6 +166,12 @@ export default function ProductDetail({ product }) {
           </button>
         </div>
       </div>
+      {notification.show && (
+        <NotificationAddToCart
+          message={notification.message}
+          status={notification.status}
+        />
+      )}
     </div>
   );
 }

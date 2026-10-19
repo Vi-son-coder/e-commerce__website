@@ -7,7 +7,7 @@ async function request({ reqPATH = "", method = "GET", data = null }) {
     },
   };
 
-  if (data && (method === "POST" || method === "PUT" || method === "PATCH")) {
+  if (data && (method === "POST" || method === "PUT" || method === "PATCH" || method === "DELETE")) {
     option.body = JSON.stringify(data);
   }
 
@@ -18,11 +18,12 @@ async function request({ reqPATH = "", method = "GET", data = null }) {
     }
   }
   try {
-    const Data = await fetch(url, option).then((res) => res.json());
-    return Data;
+    const res = await fetch(url, option);
+    return res;
   } catch (error) {
     console.log(error);
   }
 }
 
 export { request };
+ 

@@ -6,7 +6,6 @@ import Product from "../../../components/ComponentTemplates/products/products";
 import { useSearch } from "../../../hooks/useSearch";
 export default function SearchResultPage() {
   const { result, keyword } = useSearch();
-  console.log(result);
   return (
     <div className="bg-gray-100 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-4">

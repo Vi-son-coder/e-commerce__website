@@ -1,116 +1,94 @@
-
 import BreadcrumbAndStepper from "../components/BreadcrumbAndStepper";
-import ShopGroup from "../components/ShopGroup";
 import VoucherSection from "../components/VoucherSection";
 import OrderSummary from "../components/OrderSummary";
-
-// Mẫu dữ liệu Mock Data
-const CART_DATA = [
-  {
-    id: "shop-1",
-    name: "Keychron Vietnam Official Mall",
-    isMall: true,
-    checked: true,
-    voucherText: "Voucher giảm 50k",
-    items: [
-      {
-        id: "item-1",
-        checked: true,
-        tag: "NovaMall",
-        title: "Bàn Phím Cơ Không Dây Keychron Q1 Pro...",
-        variant: "Phân loại: Đen Carbon / K Pro Red",
-        price: "4.290.000đ",
-        originalPrice: "5.100.000đ",
-        quantity: 1,
-        stockText: "Còn 38 sp",
-        totalPrice: "4.290.000đ",
-        image: "https://via.placeholder.com/80",
-      },
-    ],
-  },
-  {
-    id: "shop-2",
-    name: "Coolmate Official Store",
-    isMall: true,
-    checked: true,
-    expressBadge: "Giao hỏa tốc 2H",
-    voucherText: "Mã giảm 20k",
-    items: [
-      {
-        id: "item-2",
-        checked: true,
-        title: "Áo Thun Nam Cotton Compact Siêu Mềm Mát Form R...",
-        variant: "Màu: Xanh Navy | Size: L",
-        price: "259.000đ",
-        originalPrice: "399.000đ",
-        quantity: 2,
-        stockText: "Sẵn hàng",
-        totalPrice: "518.000đ",
-        image: "https://via.placeholder.com/80",
-      },
-      {
-        id: "item-3",
-        checked: false,
-        title: "Quần Kaki Nam Dáng Slimfit Co Giãn 4 Chiều Thoáng...",
-        variant: "Màu: Be Sand | Size: 32",
-        price: "389.000đ",
-        originalPrice: "499.000đ",
-        quantity: 1,
-        stockText: "Sẵn hàng",
-        totalPrice: "389.000đ",
-        image: "https://via.placeholder.com/80",
-      },
-    ],
-  },
-];
+import ProductInCart from "../../../components/CustomComponent/ProductCardInCart/ProductCardInCart";
+import { getProductsInCart } from "../../../services/cart.service";
+import { useEffect, useState } from "react";
 
 export default function CartPage() {
+  const [productsInCart, setProductsInCart] = useState([]);
+
+  const [isAllChecked, setIsAllChecked] = useState(false);
+  
+
+  useEffect(() => {
+    async function getProducts() {
+      const productsInCart = await getProductsInCart();
+      setProductsInCart(productsInCart);
+    }
+    getProducts();
+  }, []);
+
+  function handleRemove(productId) {
+    let filterProductsInCart = productsInCart.filter(
+      (item) => item._id != productId,
+    );
+    setProductsInCart(filterProductsInCart);
+  }
+
+  function handleSelectAll(isAllChecked) {
+    const newChecked = !isAllChecked;
+    setIsAllChecked(newChecked);
+    const updateProducts = productsInCart.map((p) => ({
+      ...p,
+      checked: newChecked,
+    }));
+    setProductsInCart(updateProducts);
+    console.log(newChecked);
+  }
+  
+  function handleSelectOne(productId) {
+    let updateProducts = productsInCart.map((p) =>
+      p._id == productId ? { ...p, checked: p.checked ? !p.checked : true } : p,
+    );
+    console.log(updateProducts);
+    setProductsInCart(updateProducts);
+    setIsAllChecked(!isAllChecked);
+  }
   return (
-    
-      <div className=" mt-13">
-        {/* Breadcrumb & Stepper Component */}
-        <BreadcrumbAndStepper itemCount={3} />
+    <div className=" mt-13">
+      {/* Breadcrumb & Stepper Component */}
+      <BreadcrumbAndStepper itemCount={productsInCart.length} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* CỘT TRÁI */}
-          <div className="lg:col-span-8 space-y-4">
-            {/* Header Chọn Tất Cả */}
-            <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
-              <div className="flex items-center gap-3">
-                <input
-                  type="checkbox"
-                  defaultChecked
-                  className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
-                />
-                <span>Chọn tất cả (3 sản phẩm)</span>
-                <button className="text-red-500 hover:underline text-xs ml-2 font-medium">
-                  Xóa đã chọn
-                </button>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* CỘT TRÁI */}
+        <div className="lg:col-span-8 space-y-4">
+          {/* Header Chọn Tất Cả */}
+          <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
+            <div className="flex items-center gap-3">
+              <input
+                type="checkbox"
+                className="w-4 h-4 accent-blue-600 rounded cursor-pointer"
+                checked={isAllChecked}
+                onClick={() => handleSelectAll(isAllChecked)}
+              />
 
-              <div className="hidden md:flex items-center gap-16 text-gray-400 font-medium text-xs">
-                <span>Đơn giá</span>
-                <span>Số lượng</span>
-                <span>Số tiền</span>
-                <button className="flex items-center gap-1 text-purple-600 bg-purple-50 px-3 py-1 rounded-full text-xs hover:bg-purple-100 transition">
-                    Xem mẫu giỏ trống
-                </button>
-              </div>
+              <span>Chọn tất cả ({productsInCart.length})</span>
+              <button className="text-red-500 hover:underline text-xs ml-2 font-medium">
+                Xóa đã chọn
+              </button>
             </div>
-
-            {/* Danh sách các Shop */}
-            {CART_DATA.map((shop) => (
-              <ShopGroup key={shop.id} shop={shop} />
+          </div>
+          {/* Danh sách sản phẩm */}
+          <div className="flex flex-col gap-3">
+            {productsInCart?.map((p) => (
+              <ProductInCart
+                key={p._id}
+                product={p}
+                onRemove={handleRemove}
+                setSelectOne={handleSelectOne}
+                
+              />
             ))}
           </div>
+        </div>
 
-          {/* CỘT PHẢI */}
-          <div className="lg:col-span-4 space-y-4">
-            <VoucherSection />
-            <OrderSummary />
-          </div>
+        {/* CỘT PHẢI */}
+        <div className="lg:col-span-4 space-y-4">
+          <VoucherSection />
+          <OrderSummary products={productsInCart} />
         </div>
       </div>
-   
+    </div>
   );
 }

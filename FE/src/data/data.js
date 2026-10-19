@@ -1,4 +1,5 @@
 import pic from "../assets/Galaxy-A50-Mat-truoc-3.jpg";
+import { request } from "../api/request.api";
 let listCategory = [
   "Tất cả danh mục",
   "Điện tử",
@@ -38,5 +39,11 @@ const mockProducts = [
 ];
 
 const user = { username: "emilys", password: "emilyspass" };
-
-export { listCategory, mockProducts, user };
+async function getUser() {
+  let User = await request({ reqPATH: "/users", data: user }).then((res) =>
+    res.json(),
+  );
+  localStorage.setItem("userId", JSON.stringify(User[0]._id));
+  return User;
+}
+export { listCategory, mockProducts, getUser };

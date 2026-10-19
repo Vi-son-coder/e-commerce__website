@@ -11,8 +11,7 @@ import TitleOfBrand from "../../../components/CustomComponent/TitleContainerCont
 import TitleOfSuggestion from "../../../components/CustomComponent/TitleContainerContent/TitleOfSuggestion/TitleOfSuggestion";
 import TitleOfCategory from "../../../components/CustomComponent/TitleContainerContent/TitleOfCategory/TitleOfCategory";
 import { useProducts } from "../../../hooks/useProducts";
-import { request } from "../../../api/request.api";
-import { user } from "../../../data/data";
+import { getUser } from "../../../data/data";
 
 function ContainerHeader({
   bgCategory,
@@ -41,10 +40,6 @@ function ContainerHeader({
   );
 }
 
-async function getUser() {
-  let User = await request({ reqPATH: "/users", data: user });
-  localStorage.setItem('userId',JSON.stringify(User[0]._id));
-}
 getUser();
 function Content() {
   let category = {
@@ -171,6 +166,7 @@ function Content() {
           {products?.map(({ _id, ...p }) => {
             return (
               <Product
+              key={_id}
                 id={_id}
                 {...p}
                 bgColor="#FAF8FF"
@@ -187,6 +183,7 @@ function Content() {
           {products?.map(({ _id, ...p }) => {
             return (
               <Product
+              key={_id}
                 id={_id}
                 {...p}
                 bgColor="#FAF8FF"
@@ -214,6 +211,7 @@ function Content() {
           {products?.map(({ _id, ...p }) => {
             return (
               <Product
+              key={_id}
                 id={_id}
                 {...p}
                 bgColor="#FAF8FF"

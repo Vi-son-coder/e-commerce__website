@@ -9,19 +9,20 @@ export function useSearch() {
   const keyword = queryParams.get("keyword");
 
   useEffect(() => {
-    //setTimeout dùng để tạo khoảng chờ khi user nhập keyword tránh vc call api liên tục
-    async function searchProducts (){
+    async function searchProducts() {
       try {
-        const data = await request({
+        const res = await request({
           reqPATH: "/products/search",
           data: { keyword: keyword },
         });
+        const data = await res.json();
         setResult(data);
+        console.log(data);
       } catch (error) {
         console.log(error);
       }
-    };
+    }
     searchProducts();
   }, [keyword]);
-  return { result , keyword};
+  return { result, keyword };
 }

@@ -6,7 +6,7 @@ module.exports.index = async (req, res) => {
     status: "active",
     deleted: false,
   };
-  console.log(limit);
+  
   if (limit) {
     const products = await Products.find(find).limit(limit);
     res.json(products);

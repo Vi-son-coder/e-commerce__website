@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   images: String,
-  cart: Object,
+  cart: {
+    type: mongoose.Schema.Types.Mixed, // Cho phép chứa toàn bộ object sản phẩm + quantity bên trong
+  },
 });
 const Users = mongoose.model("Users", userSchema, "users");
 

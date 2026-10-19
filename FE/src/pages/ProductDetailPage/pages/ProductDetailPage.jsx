@@ -13,8 +13,7 @@ export default function ProductDetailPage() {
   const product = products?.find((p) => String(p._id) == String(id));
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 md:p-6 font-sans">
-      <div className="max-w-6xl mx-auto space-y-4">
+      <div className="w-full flex flex-col gap-4 mt-7">
         {/* Khối 1: Chi tiết sản phẩm chính (Ảnh, Tên, Giá, Mua hàng) */}
         <ProductDetail product={product} />
 
@@ -51,6 +50,5 @@ export default function ProductDetailPage() {
         {/* Khối 4: Danh sách Sản phẩm gợi ý (Gọi Component ở trên) */}
         <RelatedProductsList />
       </div>
-    </div>
   );
 }

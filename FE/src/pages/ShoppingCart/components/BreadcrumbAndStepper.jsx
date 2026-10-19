@@ -1,4 +1,4 @@
-export default function BreadcrumbAndStepper({ itemCount = 3 }) {
+export default function BreadcrumbAndStepper({ itemCount }) {
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
       {/* Breadcrumb */}
