@@ -22,9 +22,9 @@ export default function PackageItem({
       </div>
 
       {/* Sản phẩm */}
-      {items.map((product) => (
+      {/* {items.map((product) => (
         <ProductCardInCart product={product} />
-      ))}
+      ))} */}
 
       {/* Vận chuyển & Ghi chú */}
       <div className="bg-gray-50/80 rounded-lg p-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">

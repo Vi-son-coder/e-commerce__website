@@ -6,7 +6,6 @@ import MainLayout from "./MainLayout";
 import SearchResultPage from "./pages/Search/pages/SearchResultPage";
 import ProductDetailPage from "./pages/ProductDetailPage/pages/ProductDetailPage";
 import CartPage from "./pages/ShoppingCart/pages/CartPage";
-import PaymentPage from "./pages/Payment/pages/PaymentPage";
 import ConfirmPaymentPage from "./pages/ConfirmPayment/pages/ConfirmPaymentPage";
 import OrderTrackingPage from "./pages/OrderTracking/page/OrderTrackingPage";
 import ProductPage from "./pages/ProductPage/ProductPage";
@@ -21,8 +20,7 @@ function App() {
           <Route index element={<Content />} />
           <Route path="SearchResultPage" element={<SearchResultPage />} />
           <Route path="ProductDetailPage" element={<ProductDetailPage />} />
-          <Route path="CartPage" element={<CartPage />} />
-          <Route path="PaymentPage" element={<PaymentPage />} />
+          <Route path="CartPage/*" element={<CartPage />} />
           <Route path="ConfirmPaymentPage" element={<ConfirmPaymentPage />} />
           <Route path="OrderTrackingPage" element={<OrderTrackingPage />} />
           <Route path="products" element={<ProductPage />} />

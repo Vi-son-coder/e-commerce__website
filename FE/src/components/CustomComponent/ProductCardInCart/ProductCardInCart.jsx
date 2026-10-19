@@ -3,8 +3,9 @@ import { addToCart, removeFromCart } from "../../../services/cart.service";
 
 const ProductInCart = ({
   product = [],
-  onRemove,
-  setSelectOne,
+  onRemove = [],
+  setSelectOne = [],
+  getQuantity = []
 }) => {
   const [quantity, setQuantity] = useState(product?.quantity);
   // Định dạng tiền tệ Việt Nam (VNĐ)
@@ -23,6 +24,7 @@ const ProductInCart = ({
     } else {
       setStep(number);
       setQuantity(newQuantity);
+      getQuantity(product?._id,newQuantity);
     }
   }
 
@@ -32,9 +34,11 @@ const ProductInCart = ({
     }
     checked();
   }, [product]);
+
   useEffect(() => {
     addToCart(product?._id, step);
   }, [quantity]);
+
   let newPrice = (
     (product?.price * (100 - product?.discountPercentage)) /
     100
@@ -52,7 +56,7 @@ const ProductInCart = ({
         />
         {/* Ảnh sản phẩm */}
         <div className="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-sm font-medium flex-shrink-0">
-          <img src={product.images[0]} alt="" />
+          <img src={product?.images[0]} alt="ảnh sản phẩm" />
         </div>
 
         {/* Thông tin chi tiết */}

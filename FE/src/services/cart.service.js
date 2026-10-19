@@ -1,5 +1,7 @@
+
 import { request } from "../api/request.api";
 import { getUser } from "../data/data";
+
 const userId = JSON.parse(localStorage.getItem("userId"));
 export async function addToCart(productId, quantity) {
   try {
@@ -55,3 +57,4 @@ export async function getProductsInCart() {
   let productsInCart = user[0].cart;
   return productsInCart;
 }
+
