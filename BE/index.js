@@ -7,7 +7,7 @@ const router = require("./Router/client/index.router");
 const routerAdmin = require("./Router/admin/index.router");
 
 const app = express();
-const port = process.env.PORT;
+const port = 3000;
 
 app.use(cors());
 
