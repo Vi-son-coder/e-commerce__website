@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import NotificationModule from "../../../components/ComponentTemplates/NotificationModule";
 export default function OrderSummary({ products }) {
   const [priceTemporary, setPriceTemporary] = useState(0);
   const [quantityProducts, setQuantityProducts] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [show, setShow] = useState(false);
+  const Notification = useRef(null);
   useEffect(() => {
     async function payment() {
       const selectProducts = products.filter((p) => p.checked == true);
@@ -49,16 +52,40 @@ export default function OrderSummary({ products }) {
         </div>
       </div>
 
-      <Link to="PaymentPage">
-        <button className="w-full bg-blue-600 !text-white font-bold py-3.5 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-200">
-          Tiến Hành Thanh Toán
-        </button>
-      </Link>
+      <div>
+        {quantityProducts == 0 ? (
+          <button
+            className="w-full bg-blue-600  font-bold py-3.5 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-200 !text-white 
+            cursor-pointer
+            "
+            onClick={() => {
+              setShow(true);
+              clearTimeout(Notification.current);
+              Notification.current = setTimeout(() => {
+                setShow(false);
+              }, 2500);
+            }}
+          >
+            Tiến Hành Thanh Toán
+          </button>
+        ) : (
+          <Link to="PaymentPage">
+            <button className="w-full bg-blue-600  font-bold py-3.5 rounded-xl hover:bg-blue-700 transition flex items-center justify-center gap-2 shadow-lg shadow-blue-200 !text-white cursor-pointer">
+              Tiến Hành Thanh Toán
+            </button>
+          </Link>
+        )}
+      </div>
 
       <div className="flex justify-center items-center gap-6 pt-2 text-xs text-gray-500 border-t border-gray-100">
         <span className="flex items-center gap-1">Bảo mật SSL 256-bit</span>
         <span className="flex items-center gap-1">Đổi trả 30 ngày free</span>
       </div>
+      {show && (
+        <NotificationModule
+          message={"Vui lòng chọn sản phẩm cần thanh toán!"}
+        />
+      )}
     </div>
   );
 }

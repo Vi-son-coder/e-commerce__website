@@ -18,6 +18,7 @@ function TopBar({ children }) {
 function Header() {
   const [selectTab, setSelectTab] = useState("Tất cả danh mục");
   const [inputValue, setInputValue] = useState("");
+
   return (
     <>
       <div className="flex p-[6px_80px_6px_80px] justify-between bg-[#F2F3FF]">
@@ -140,9 +141,8 @@ function Header() {
                       </p>
                     </div>
 
-                    <div>
+                    <div className="py-3">
                       <p className="text-gray-700">Giỏ hàng</p>
-                      <strong>0đ</strong>
                     </div>
                   </div>
                 </Link>

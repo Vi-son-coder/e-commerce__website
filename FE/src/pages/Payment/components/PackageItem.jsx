@@ -1,84 +1,44 @@
-import ProductCardInCart from "../../../components/CustomComponent/ProductCardInCart/ProductCardInCart";
-
-export default function PackageItem({
-  shopName,
-  items,
-  shippingOptions,
-  notePlaceholder,
-}) {
+export default function PackageItem({ product = null }) {
+  const formatCurrency = (amount) => {
+    return amount.toLocaleString("vi-VN") + "đ";
+  };
+  let newPrice = (
+    (product?.price * (100 - product?.discountPercentage)) /
+    100
+  ).toFixed(0);
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
-      {/* Shop Header */}
-      <div className="flex justify-between items-center pb-3 mb-3 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <span className="bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-            MALL
-          </span>
-          <span className="font-bold text-gray-800 text-sm">{shopName}</span>
+    <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
+      {/* Khối bên trái: Ảnh + Thông tin sản phẩm */}
+      <div className="flex items-center gap-4">
+        {/* Ảnh sản phẩm */}
+        <div className="w-20 h-20 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-sm font-medium flex-shrink-0">
+          <img src={product?.images[0]} alt="ảnh sản phẩm" />
         </div>
-        <button className="text-xs text-blue-600 flex items-center gap-1 hover:underline font-medium">
-          💬 Chat với người bán
-        </button>
+
+        {/* Thông tin chi tiết */}
+        <div className="flex flex-col gap-1.5">
+          <h3 className="text-gray-900 font-semibold text-base line-clamp-1">
+            {product?.title}
+          </h3>
+          <div>
+            <span className="inline-block bg-gray-100 text-gray-600 text-xs px-2.5 py-1 rounded-md">
+              Màu: | Size:
+            </span>
+          </div>
+        </div>
       </div>
-
-      {/* Sản phẩm */}
-      {/* {items.map((product) => (
-        <ProductCardInCart product={product} />
-      ))} */}
-
-      {/* Vận chuyển & Ghi chú */}
-      <div className="bg-gray-50/80 rounded-lg p-3 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-        <div>
-          <span className="font-bold text-gray-700 block mb-2">
-            🚚 Phương thức giao hàng
+      {/* Số lượng sản phẩm */}
+      <span className="font-semibold">Số lượng: {product.quantity}</span>
+      {/* Khối bên phải: Giá tiền */}
+      <div className="flex flex-col items-end justify-center pl-4">
+        <span className="text-black font-bold text-lg leading-tight">
+          {formatCurrency(newPrice)}
+        </span>
+        {product?.price && (
+          <span className="text-gray-400 text-sm line-through mt-0.5">
+            {formatCurrency(product?.price)}
           </span>
-          {shippingOptions.map((option, idx) => (
-            <label
-              key={idx}
-              className="flex items-start gap-2 mb-2 cursor-pointer"
-            >
-              <input
-                type="radio"
-                name={`shipping-${shopName}`}
-                defaultChecked={option.checked}
-                className="mt-0.5 text-blue-600"
-              />
-              <div className="flex-1 flex justify-between">
-                <div>
-                  <span className="font-semibold text-gray-800">
-                    {option.title}
-                  </span>
-                  {option.subtext && (
-                    <p className="text-gray-400 text-[11px]">
-                      {option.subtext}
-                    </p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <span className="font-bold text-blue-600">
-                    {option.price}
-                  </span>
-                  {option.oldPrice && (
-                    <p className="text-gray-400 line-through text-[10px]">
-                      {option.oldPrice}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </label>
-          ))}
-        </div>
-
-        <div>
-          <span className="font-bold text-gray-700 block mb-2">
-            ✏️ Lời nhắn cho shop:
-          </span>
-          <textarea
-            rows="2"
-            placeholder={notePlaceholder}
-            className="w-full border rounded-lg p-2 text-xs focus:outline-none focus:border-blue-500 bg-white"
-          />
-        </div>
+        )}
       </div>
     </div>
   );

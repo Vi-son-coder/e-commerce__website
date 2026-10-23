@@ -84,7 +84,11 @@ export default function CartPage() {
             </>
           }
         />
-        <Route path="PaymentPage" element={<PaymentPage />} />
+        {console.log(productsInCart)}
+        <Route
+          path="PaymentPage"
+          element={<PaymentPage products={productsInCart} />}
+        />
       </Routes>
     </div>
   );

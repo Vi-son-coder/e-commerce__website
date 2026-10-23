@@ -5,7 +5,7 @@ const ProductInCart = ({
   product = [],
   onRemove = [],
   setSelectOne = [],
-  getQuantity = []
+  getQuantity = [],
 }) => {
   const [quantity, setQuantity] = useState(product?.quantity);
   // Định dạng tiền tệ Việt Nam (VNĐ)
@@ -24,7 +24,7 @@ const ProductInCart = ({
     } else {
       setStep(number);
       setQuantity(newQuantity);
-      getQuantity(product?._id,newQuantity);
+      getQuantity(product?._id, newQuantity);
     }
   }
 
@@ -82,7 +82,7 @@ const ProductInCart = ({
         <span className="font-semibold">{quantity}</span>
         <button
           onClick={() => quantityChange(1)}
-          className="bg-white w-8 h-8 rounded-[7px] font-black "
+          className="bg-white w-8 h-8 rounded-[7px] font-black active:bg-[#d4d4d4d2]"
         >
           +
         </button>

@@ -1,6 +1,6 @@
 
 
-export default function NotificationAddToCart({ message, status }) {
+export default function NotificationAddToCart({ message, status = null}) {
   return (
     <div className="fixed top-0 h-full w-[1371px] flex items-center justify-center pointer-events-none">
       <div className="flex p-3 rounded-2xl bg-[#03030381] text-white flex-col items-center justify-center">

@@ -3,65 +3,8 @@ import PackageItem from "../components/PackageItem";
 import PaymentMethods from "../components/PaymentMethods";
 import OrderSummary from "../components/OrderSummary";
 
-export default function PaymentPage() {
-  const packagesData = [
-    {
-      id: 1,
-      shopName: "Keychron Vietnam Official Mall",
-      items: [
-        {
-          id: "p1",
-          title: "Bàn Phím Cơ Không Dây Cao Cấp Keychron Q1 Pro QMK/VIA",
-          variant: "Đen Carbon / K Pro Red Switch",
-          price: 4290000,
-          oldPrice: 4890000,
-          quantity: 1,
-          isOfficial: true,
-          image: "https://via.placeholder.com/100",
-        },
-      ],
-      shippingOptions: [
-        {
-          title: "Hóa Tốc NovaNow 2H (Nhận chiều nay)",
-          price: "25.000đ",
-          checked: true,
-        },
-        {
-          title: "Tiêu chuẩn (1-2 ngày)",
-          price: "15.000đ (0đ)",
-          oldPrice: "15.000đ",
-        },
-      ],
-      notePlaceholder: "Lưu ý đóng gói kỹ, giao trong giờ hành chính...",
-    },
-    {
-      id: 2,
-      shopName: "Coolmate Official Store",
-      items: [
-        {
-          id: "p2",
-          title: "Áo Thun Nam Cotton Compact Siêu Mềm Thoáng Khí",
-          variant: "Xanh Navy · Size L (SL: 2 cái)",
-          price: 518000,
-          oldPrice: 569000,
-          quantity: 2,
-          badge: "Tài trợ Freeship",
-          image: "https://via.placeholder.com/100",
-        },
-      ],
-      shippingOptions: [
-        {
-          title: "Tiêu chuẩn Nhanh (1-2 ngày)",
-          subtext: "Dự kiến giao ngày mai",
-          price: "0đ",
-          oldPrice: "20.000đ",
-          checked: true,
-        },
-      ],
-      notePlaceholder: "Ghi chú thêm cho shop...",
-    },
-  ];
-
+export default function PaymentPage({ products }) {
+  const packagesData = products?.filter((p) => p.checked == true);
   return (
     <div>
       {/* Layout Grid */}
@@ -72,7 +15,7 @@ export default function PaymentPage() {
 
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-bold text-gray-800 text-sm uppercase flex items-center gap-2">
-              📦 DANH SÁCH KIỆN HÀNG (2 Nhà bán)
+              📦 DANH SÁCH KIỆN HÀNG ({packagesData.length} Sản phẩm)
             </h3>
             <span className="text-xs text-gray-500">
               Tổng 3 sản phẩm sẵn sàng giao
@@ -80,13 +23,7 @@ export default function PaymentPage() {
           </div>
 
           {packagesData.map((pkg) => (
-            <PackageItem
-              key={pkg.id}
-              shopName={pkg.shopName}
-              items={pkg.items}
-              shippingOptions={pkg.shippingOptions}
-              notePlaceholder={pkg.notePlaceholder}
-            />
+            <PackageItem key={pkg.id} product={pkg} />
           ))}
 
           <PaymentMethods />
@@ -94,7 +31,7 @@ export default function PaymentPage() {
 
         {/* Sidebar Right */}
         <div className="lg:col-span-1">
-          <OrderSummary />
+          <OrderSummary products={packagesData} />
         </div>
       </div>
     </div>
