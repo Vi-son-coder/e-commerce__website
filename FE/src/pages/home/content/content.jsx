@@ -112,6 +112,41 @@ function Content() {
         </svg>
       ),
     },
+    {
+      key: "laptops",
+      title: "Máy tính xách tay",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-laptop"
+          className="size-7 text-black"
+          viewBox="0 0 16 16"
+        >
+          <path d="M13.5 3a.5.5 0 0 1 .5.5V11H2V3.5a.5.5 0 0 1 .5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2zM0 12.5h16a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5" />
+        </svg>
+      ),
+    },
+    {
+      key: "smartphones",
+      title: "Điện thoại thông minh",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          fill="currentColor"
+          class="bi bi-phone"
+           className="size-7 text-black"
+          viewBox="0 0 16 16"
+        >
+          <path d="M11 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM5 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z" />
+          <path d="M8 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2" />
+        </svg>
+      ),
+    },
   ];
 
   const productsAIRcm = useProducts({ limit: 7 });

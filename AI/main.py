@@ -1,4 +1,9 @@
+from collections import defaultdict
+import math
+import os
+
 from fastapi import FastAPI, HTTPException
+from mlxtend.frequent_patterns import apriori, association_rules
 from pymongo import MongoClient
 import numpy as np
 import pandas as pd
@@ -6,7 +11,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from bson import ObjectId
-import os
 
 app = FastAPI(title="NCF Recommendation AI Service")
 
@@ -87,6 +91,99 @@ def load_training_data():
     return interactions
 
 
+def load_apriori_transactions(product_ids):
+    known_product_ids = set(product_ids)
+    transactions = []
+
+    for user in users_collection.find({}, {"cart": 1}):
+        cart = user.get("cart") or []
+        if not isinstance(cart, list):
+            continue
+
+        product_set = {
+            str(item.get("_id"))
+            for item in cart
+            if isinstance(item, dict)
+            and item.get("_id") is not None
+            and str(item.get("_id")) in known_product_ids
+        }
+        if len(product_set) > 1:
+            transactions.append(product_set)
+
+    session_products = defaultdict(set)
+    behaviors = user_behavior_collection.find(
+        {
+            "actionType": {"$in": ["VIEW_PRODUCT", "ADD_TO_CART"]},
+            "sessionId": {"$ne": None},
+            "targetId": {"$ne": None},
+        },
+        {"sessionId": 1, "targetId": 1},
+    )
+    for behavior in behaviors:
+        session_id = behavior.get("sessionId")
+        product_id = str(behavior.get("targetId"))
+        if session_id and product_id in known_product_ids:
+            session_products[session_id].add(product_id)
+
+    transactions.extend(
+        product_set
+        for product_set in session_products.values()
+        if len(product_set) > 1
+    )
+    return transactions
+
+
+def get_apriori_scores(product_ids, seed_product_id=None):
+    transactions = load_apriori_transactions(product_ids)
+    if not transactions:
+        return {}
+
+    transaction_products = sorted(set().union(*transactions))
+    if len(transaction_products) < 2:
+        return {}
+
+    encoded_transactions = pd.DataFrame(
+        [
+            {
+                product_id: product_id in transaction
+                for product_id in transaction_products
+            }
+            for transaction in transactions
+        ]
+    )
+    frequent_itemsets = apriori(
+        encoded_transactions,
+        min_support=max(1 / len(transactions), 0.01),
+        use_colnames=True,
+        max_len=3,
+    )
+    if frequent_itemsets.empty or not frequent_itemsets["itemsets"].map(len).gt(1).any():
+        return {}
+
+    rules = association_rules(
+        frequent_itemsets,
+        metric="confidence",
+        min_threshold=0.1,
+        return_metrics=["support", "confidence", "lift"],
+    )
+    scores = {}
+    for rule in rules.itertuples():
+        if seed_product_id and seed_product_id not in rule.antecedents:
+            continue
+
+        rule_score = float(rule.confidence) * float(rule.lift)
+        if not math.isfinite(rule_score):
+            continue
+        if seed_product_id is None:
+            rule_score *= float(rule.support)
+
+        for product_id in rule.consequents:
+            if product_id != seed_product_id:
+                scores[product_id] = max(scores.get(product_id, 0), rule_score)
+
+    return scores
+
+
 @app.get("/")
 def read_root():
     return {"status": "NCF Recommendation AI Service Running"}
@@ -138,20 +235,38 @@ def get_home_recommendations(limit: int = 7):
                     if product_id in scores:
                         scores[product_id] += 3
 
-        products.sort(
-            key=lambda product: (
-                scores[str(product["_id"])],
-                float(product.get("rating") or 0),
-            ),
-            reverse=True,
-        )
+        apriori_scores = get_apriori_scores(product_ids)
+        max_interaction_score = max(scores.values(), default=0)
+        max_apriori_score = max(apriori_scores.values(), default=0)
+
+        def homepage_score(product):
+            product_id = str(product["_id"])
+            interaction_score = (
+                scores[product_id] / max_interaction_score
+                if max_interaction_score
+                else 0
+            )
+            apriori_score = (
+                apriori_scores.get(product_id, 0) / max_apriori_score
+                if max_apriori_score
+                else 0
+            )
+            rating_score = min(float(product.get("rating") or 0) / 5, 1)
+            return (
+                0.45 * apriori_score
+                + 0.35 * interaction_score
+                + 0.2 * rating_score,
+                rating_score,
+            )
+
+        products.sort(key=homepage_score, reverse=True)
         recommendations = products[:limit]
         for product in recommendations:
             product["_id"] = str(product["_id"])
 
         return {
             "success": True,
-            "source": "MongoDB_Interaction_Ranking",
+            "source": "Apriori_Interaction_Ranking" if apriori_scores else "MongoDB_Interaction_Ranking",
             "recommendations": recommendations,
         }
     except Exception as error:
@@ -215,7 +330,7 @@ def get_ncf_recommendations(product_id: str):
 
         # Dự đoán điểm số cho sản phẩm hiện tại (`product_id`) với các sản phẩm khác
         model.eval()
-        recommendations = []
+        ncf_ranked_ids = []
         if product_id in item2id:
             target_item_idx = item2id[product_id]
             # Lấy đại diện user đầu tiên hoặc user mặc định để tính điểm tương quan item-item thông qua embedding
@@ -234,19 +349,38 @@ def get_ncf_recommendations(product_id: str):
                 for idx in top_indices:
                     curr_id = item_ids[idx]
                     if curr_id != product_id:
-                        recommendations.append(curr_id)
-                    if len(recommendations) >= 7:
-                        break
+                        ncf_ranked_ids.append(curr_id)
+
+        apriori_scores = get_apriori_scores(item_ids, seed_product_id=product_id)
+        ncf_scores = {
+            candidate_id: 1 - rank / max(len(ncf_ranked_ids), 1)
+            for rank, candidate_id in enumerate(ncf_ranked_ids)
+        }
+        max_apriori_score = max(apriori_scores.values(), default=0)
+        candidate_ids = set(ncf_scores) | set(apriori_scores)
+        recommendations = sorted(
+            candidate_ids,
+            key=lambda candidate_id: (
+                0.65 * ncf_scores.get(candidate_id, 0)
+                + 0.35
+                * (
+                    apriori_scores.get(candidate_id, 0) / max_apriori_score
+                    if max_apriori_score
+                    else 0
+                )
+            ),
+            reverse=True,
+        )[:7]
 
         # Truy vấn thông tin chi tiết sản phẩm từ MongoDB
-        recommended_products = fetch_products_by_ids(recommendations[:7])
+        recommended_products = fetch_products_by_ids(recommendations)
 
         if not recommended_products:
             return fallback_popular_products(product_id)
 
         return {
             "success": True,
-            "source": "Deep_Learning_NCF",
+            "source": "Hybrid_NCF_Apriori" if apriori_scores else "Deep_Learning_NCF",
             "recommendations": recommended_products
         }
 
@@ -286,16 +420,27 @@ def fallback_popular_products(current_product_id: str):
     except Exception:
         pass
 
-    popular = list(products_collection.find(
-        {"_id": {"$ne": query_id}},
+    products = list(products_collection.find(
+        {"status": "active", "deleted": False},
         {"_id": 1, "title": 1, "brand": 1, "price": 1, "discountPercentage": 1, "rating": 1, "images": 1, "category": 1}
-    ).limit(7))
+    ))
+    product_ids = [str(product["_id"]) for product in products]
+    apriori_scores = get_apriori_scores(product_ids, seed_product_id=current_product_id)
+    products = [product for product in products if product["_id"] != query_id]
+    products.sort(
+        key=lambda product: (
+            apriori_scores.get(str(product["_id"]), 0),
+            float(product.get("rating") or 0),
+        ),
+        reverse=True,
+    )
+    popular = products[:7]
 
     for p in popular:
         p["_id"] = str(p["_id"])
 
     return {
         "success": True,
-        "source": "Fallback_Popular",
+        "source": "Fallback_Apriori_Popular" if apriori_scores else "Fallback_Popular",
         "recommendations": popular
     }

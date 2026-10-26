@@ -81,22 +81,71 @@ module.exports.edit = (req, res) => {
 };
 
 module.exports.search = async (req, res) => {
-  const keyword = req.query.keyword;
   const find = {
     status: "active",
     deleted: false,
   };
-  if (req.query.keyword) {
-    find.title = RegExp(keyword, "i");
+
+  const keyword = String(req.query.keyword || "").trim();
+  if (keyword) {
+    const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    find.title = new RegExp(escapedKeyword, "i");
   }
   if (req.query.id) {
     find._id = req.query.id;
   }
 
-  const category = req.query.category;
-  if (category) {
-    find.category = category;
+  const brand = String(req.query.brand || "").trim();
+  if (brand) {
+    const escapedBrand = brand.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    find.brand = new RegExp(escapedBrand, "i");
   }
-  const products = await Products.find(find);
-  res.json(products);
+
+  if (req.query.category) find.category = req.query.category;
+
+  const minPrice = Number(req.query.minPrice);
+  const maxPrice = Number(req.query.maxPrice);
+  const minRating = Number(req.query.minRating);
+  const minDiscount = Number(req.query.minDiscount);
+  const price = {};
+
+  if (
+    req.query.minPrice !== undefined &&
+    Number.isFinite(minPrice) &&
+    minPrice >= 0
+  ) {
+    price.$gte = minPrice;
+  }
+  if (
+    req.query.maxPrice !== undefined &&
+    Number.isFinite(maxPrice) &&
+    maxPrice >= 0
+  ) {
+    price.$lte = maxPrice;
+  }
+  if (Object.keys(price).length) find.price = price;
+  if (
+    req.query.minRating !== undefined &&
+    Number.isFinite(minRating) &&
+    minRating >= 0 &&
+    minRating <= 5
+  ) {
+    find.rating = { $gte: minRating };
+  }
+  if (
+    req.query.minDiscount !== undefined &&
+    Number.isFinite(minDiscount) &&
+    minDiscount >= 0 &&
+    minDiscount <= 100
+  ) {
+    find.discountPercentage = { $gte: minDiscount };
+  }
+
+  try {
+    const products = await Products.find(find);
+    return res.json(products);
+  } catch (error) {
+    console.error("Lỗi tìm kiếm sản phẩm:", error.message);
+    return res.status(500).json({ message: "Không thể tìm kiếm sản phẩm" });
+  }
 };

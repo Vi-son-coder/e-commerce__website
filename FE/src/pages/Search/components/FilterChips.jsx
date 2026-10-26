@@ -1,10 +1,50 @@
+import { useSearchParams } from "react-router-dom";
+
 export default function FilterChips() {
-  const chips = [
-    "Giao Hỏa Tốc 2H",
-    "Thương hiệu: Keychron, Akko",
-    "Giá: 1.000.000đ - 3.500.000đ",
-    "Đánh giá: từ 4 sao",
-  ];
+  const [searchParams, setSearchParams] = useSearchParams();
+  const chips = [];
+
+  if (searchParams.has("brand")) {
+    chips.push({
+      key: "brand",
+      label: `Thương hiệu: ${searchParams.get("brand")}`,
+    });
+  }
+  if (searchParams.has("minPrice") || searchParams.has("maxPrice")) {
+    chips.push({
+      key: "price",
+      label: `Giá: ${searchParams.get("minPrice") || "0"}đ - ${searchParams.get("maxPrice") || "không giới hạn"}`,
+      params: ["minPrice", "maxPrice"],
+    });
+  }
+  if (searchParams.has("minRating")) {
+    chips.push({
+      key: "minRating",
+      label: `Đánh giá: từ ${searchParams.get("minRating")} sao`,
+    });
+  }
+  if (searchParams.has("minDiscount")) {
+    chips.push({
+      key: "minDiscount",
+      label: `Giảm giá từ ${searchParams.get("minDiscount")}%`,
+    });
+  }
+
+  function removeChip(chip) {
+    const nextParams = new URLSearchParams(searchParams);
+    (chip.params || [chip.key]).forEach((key) => nextParams.delete(key));
+    setSearchParams(nextParams);
+  }
+
+  function clearFilters() {
+    const nextParams = new URLSearchParams(searchParams);
+    ["brand", "minPrice", "maxPrice", "minRating", "minDiscount"].forEach(
+      (key) => nextParams.delete(key),
+    );
+    setSearchParams(nextParams);
+  }
+
+  if (!chips.length) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2 py-2 text-xs bg-white px-3 rounded-[7px] shadow">
@@ -27,16 +67,27 @@ export default function FilterChips() {
         <span className="font-semibold">ĐANG LỌC:</span>
       </div>
 
-      {chips.map((chip, index) => (
+      {chips.map((chip) => (
         <span
-          key={index}
+          key={chip.key}
           className="bg-blue-50 text-blue-600 px-2 py-1 rounded border border-blue-200 flex items-center space-x-1"
         >
-          <span>{chip}</span>
-          <button className="font-bold hover:text-blue-800 cursor-pointer">×</button>
+          <span>{chip.label}</span>
+          <button
+            type="button"
+            aria-label={`Xóa bộ lọc ${chip.label}`}
+            onClick={() => removeChip(chip)}
+            className="font-bold hover:text-blue-800 cursor-pointer"
+          >
+            ×
+          </button>
         </span>
       ))}
-      <button className="!text-red-600 hover:underline ml-auto font-medium">
+      <button
+        type="button"
+        onClick={clearFilters}
+        className="!text-red-600 hover:underline ml-auto font-medium"
+      >
         Xóa tất cả bộ lọc
       </button>
     </div>

@@ -4,8 +4,10 @@ import SidebarFilter from "../components/SidebarFilter";
 import SortBar from "../components/SortBar";
 import Product from "../../../components/ComponentTemplates/products/products";
 import { useSearch } from "../../../hooks/useSearch";
+import { useLocation } from "react-router-dom";
 export default function SearchResultPage() {
-  const { result, keyword  } = useSearch();
+  const { result, keyword } = useSearch();
+  const location = useLocation();
   return (
     <div className="bg-gray-100 min-h-screen pb-10">
       <div className="max-w-7xl mx-auto px-4">
@@ -19,7 +21,7 @@ export default function SearchResultPage() {
 
         <div className="flex space-x-4 mt-4">
           {/* Cột trái: Filter */}
-          <SidebarFilter />
+          <SidebarFilter key={location.search} />
 
           {/* Cột phải: Danh sách sản phẩm */}
           <main className="flex-1">

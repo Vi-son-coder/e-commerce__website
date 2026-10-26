@@ -5,24 +5,24 @@ import { useLocation } from "react-router-dom";
 export function useSearch() {
   const [result, setResult] = useState([]);
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const keyword = queryParams.get("keyword");
+  const query = location.search;
+  const keyword = new URLSearchParams(query).get("keyword") || "";
 
   useEffect(() => {
     async function searchProducts() {
       try {
         const res = await request({
           reqPATH: "/products/search",
-          data: { keyword: keyword },
+          data: Object.fromEntries(new URLSearchParams(query)),
         });
+        if (!res?.ok) throw new Error("Không thể tìm kiếm sản phẩm");
         const data = await res.json();
         setResult(data);
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
     }
     searchProducts();
-  }, [keyword]);
+  }, [query]);
   return { result, keyword };
 }
