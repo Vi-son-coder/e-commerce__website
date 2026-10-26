@@ -14,6 +14,6 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.Mixed, // Cho phép chứa toàn bộ object sản phẩm + quantity bên trong
   },
 });
-const Users = mongoose.model("Users", userSchema, "users");
+const Users = mongoose.model("User", userSchema, "users");
 
 module.exports = Users;

@@ -36,7 +36,6 @@ module.exports.edit = (req, res) => {
 
 module.exports.search = async (req, res) => {
   const keyword = req.query.keyword;
-
   const find = {
     status: "active",
     deleted: false,
@@ -46,6 +45,11 @@ module.exports.search = async (req, res) => {
   }
   if (req.query.id) {
     find._id = req.query.id;
+  }
+
+  const category = req.query.category;
+  if(category){
+    find.category = category;
   }
   const products = await Products.find(find);
   res.json(products);

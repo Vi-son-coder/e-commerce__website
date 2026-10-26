@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./category.css";
 
 function ListOnHeader({ children, active, selectTab }) {
@@ -14,14 +15,16 @@ function ListOnHeader({ children, active, selectTab }) {
   );
 }
 
-function ListCategory({ icon, title }) {
+function ListCategory({ category, icon, title }) {
   return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="bg-[#F2F3FF] w-15 h-15 flex justify-center items-center rounded-[50%] text-[#004AC6]">
-        {icon}
+    <Link to={`category?category=${category}`}>
+      <div className="flex flex-col items-center gap-3">
+        <div className="bg-[#F2F3FF] w-15 h-15 flex justify-center items-center rounded-[50%] text-[#004AC6] p-4">
+          {icon}
+        </div>
+        <p className="text-sm font-medium">{title}</p>
       </div>
-      <p className="text-sm font-medium">{title}</p>
-    </div>
+    </Link>
   );
 }
 

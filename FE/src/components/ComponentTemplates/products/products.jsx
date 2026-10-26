@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import "./products.css";
+import { trackAction } from "../../../services/tracking.service";
 
 function Product({
   id,
@@ -23,11 +24,12 @@ function Product({
       <div
         style={{ background: bgColor }}
         className="flex flex-col p-3 w-fit rounded-xl shrink-0 min-w-[170px] max-w-[180px] gap-1 h-full"
+        onClick={() => trackAction('VIEW_PRODUCT',id)}
       >
         <div className="relative">
           <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`-${discountPercentage}%`}</p>
           <img
-            src={images}
+            src={images[0]}
             alt=""
             className="object-cover rounded-[15px] aspect-square border-1 border-[#efefef8a]"
           />

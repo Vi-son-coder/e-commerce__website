@@ -4,7 +4,7 @@ import { useProducts } from "../../../hooks/useProducts";
 
 // 2. Component chính hiển thị Danh sách gợi ý
 export default function RelatedProductsList() {
-  const {products} = useProducts();
+  const {products} = useProducts({limit:7});
 
   return (
     <section className="bg-white rounded-2xl p-5 shadow-sm mt-4">
@@ -19,7 +19,7 @@ export default function RelatedProductsList() {
       </div>
 
       {/* Lưới sản phẩm (Grid 6 cột) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+      <div className="flex gap-4 overflow-auto ">
         {products?.map(({ _id, ...p }) => (
           /* Dùng Destructuring + Spread props gọn gàng */
           <Product

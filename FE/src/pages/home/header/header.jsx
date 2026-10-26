@@ -4,6 +4,7 @@ import { ListOnHeader } from "../../../components/ComponentTemplates/category/ca
 import { handleClick } from "../../../components/ComponentTemplates/Act/Act";
 import { listCategory } from "../../../data/data";
 import { Link } from "react-router-dom";
+import { trackAction } from "../../../services/tracking.service";
 
 function TopBar({ children }) {
   return (
@@ -87,7 +88,10 @@ function Header() {
                   />
                 </div>
                 <Link to={`SearchResultPage?keyword=${inputValue}`}>
-                  <button className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm">
+                  <button
+                    className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm"
+                    onClick={trackAction("SEARCH", inputValue)}
+                  >
                     Tìm
                   </button>
                 </Link>

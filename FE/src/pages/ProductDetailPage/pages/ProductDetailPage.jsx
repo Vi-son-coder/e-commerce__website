@@ -12,6 +12,7 @@ export default function ProductDetailPage() {
 
   const product = products?.find((p) => String(p._id) == String(id));
 
+
   return (
       <div className="w-full flex flex-col gap-4 mt-7">
         {/* Khối 1: Chi tiết sản phẩm chính (Ảnh, Tên, Giá, Mua hàng) */}

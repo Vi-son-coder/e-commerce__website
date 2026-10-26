@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { addToCart } from "../../../services/cart.service";
 import NotificationAddToCart from "./NotificationAddToCart";
+import { trackAction } from "../../../services/tracking.service";
 
 export default function ProductDetail({ product }) {
   const newPrice = (
@@ -52,11 +53,13 @@ export default function ProductDetail({ product }) {
         </div>
         {/* List ảnh nhỏ */}
         <div className="flex gap-2">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {product?.images.map((i) => (
             <div
               key={i}
               className="w-14 h-14 bg-gray-100 rounded-lg border hover:border-blue-500 cursor-pointer"
-            />
+            >
+              <img src={i} alt="ảnh sản phẩm" />
+            </div>
           ))}
         </div>
       </div>
@@ -156,6 +159,7 @@ export default function ProductDetail({ product }) {
           <button
             onClick={() => {
               handleAddToCartAlert(product?._id, quantityClick);
+              trackAction("ADD_TO_CART", product?._id);
             }}
             className="flex-1 py-3 border border-blue-600 text-blue-600 font-medium rounded-xl hover:bg-blue-50"
           >
