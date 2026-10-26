@@ -90,7 +90,7 @@ function Header() {
                 <Link to={`SearchResultPage?keyword=${inputValue}`}>
                   <button
                     className="rounded-sm bg-blue-500 !text-white p-[7px_15px] text-sm"
-                    onClick={trackAction("SEARCH", inputValue)}
+                    onClick={() => trackAction("SEARCH", inputValue)}
                   >
                     Tìm
                   </button>

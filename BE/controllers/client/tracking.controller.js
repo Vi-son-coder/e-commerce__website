@@ -11,9 +11,7 @@ module.exports.index = async (req, res) => {
       targetId,
       metadata,
     });
-    res
-      .status(201)
-      .json({ success: true, message: "Đã lưu hành vi người dùng." });
+    return res.status(201).json({ success: true });
   } catch (error) {
     console.error("Lỗi lưu tracking:", error);
     res.status(500).json({ success: false, error: error.message });

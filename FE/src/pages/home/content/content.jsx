@@ -13,7 +13,8 @@ import TitleOfCategory from "../../../components/CustomComponent/TitleContainerC
 import { useProducts } from "../../../hooks/useProducts";
 import { getUser } from "../../../data/data";
 import { Outlet, useLocation } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { request } from "../../../api/request.api";
 function ContainerHeader({
   bgCategory,
   bgDeal,
@@ -114,6 +115,44 @@ function Content() {
   ];
 
   const productsAIRcm = useProducts({ limit: 7 });
+  const [aiRecommendations, setAiRecommendations] = useState([]);
+  const [aiStatus, setAiStatus] = useState("loading");
+  const [recommendationRefresh, setRecommendationRefresh] = useState(0);
+
+  useEffect(() => {
+    let isActive = true;
+
+    async function getAiRecommendations() {
+      setAiStatus("loading");
+
+      try {
+        const response = await request({
+          reqPATH: "/products/recommendations/home?limit=7",
+        });
+        if (!response?.ok) {
+          throw new Error("Không thể tải gợi ý AI");
+        }
+
+        const data = await response.json();
+        if (!isActive) return;
+
+        const recommendations = Array.isArray(data.recommendations)
+          ? data.recommendations
+          : [];
+        setAiRecommendations(recommendations);
+        setAiStatus(recommendations.length ? "ready" : "empty");
+      } catch (error) {
+        if (!isActive) return;
+        console.error("Lỗi tải gợi ý AI trên trang chủ:", error);
+        setAiStatus("error");
+      }
+    }
+
+    getAiRecommendations();
+    return () => {
+      isActive = false;
+    };
+  }, [recommendationRefresh]);
 
   const categorySectionRef = useRef(null);
   const location = useLocation();
@@ -126,7 +165,7 @@ function Content() {
         block: "start",
       });
     }
-  }, [location.search]);
+  }, [hasQuerry]);
   return (
     <>
       <div className="flex mt-13 gap-5">
@@ -220,9 +259,12 @@ function Content() {
         </div>
       </ContainerContent>
       <ContainerContent>
-        <TitleOfAIRecomment />
+        <TitleOfAIRecomment
+          isRefreshing={aiStatus === "loading"}
+          onRefresh={() => setRecommendationRefresh((value) => value + 1)}
+        />
         <div className="flex overflow-auto gap-4">
-          {productsAIRcm.products?.map(({ _id, ...p }) => {
+          {aiRecommendations.map(({ _id, ...p }) => {
             return (
               <Product
                 key={_id}
@@ -234,6 +276,19 @@ function Content() {
               />
             );
           })}
+          {aiStatus === "loading" && (
+            <p className="py-8 text-sm text-gray-500">Đang tải gợi ý AI...</p>
+          )}
+          {aiStatus === "empty" && (
+            <p className="py-8 text-sm text-gray-500">
+              Chưa có sản phẩm phù hợp để gợi ý.
+            </p>
+          )}
+          {aiStatus === "error" && (
+            <p className="py-8 text-sm text-red-700">
+              Không tải được gợi ý AI. Hãy thử làm mới.
+            </p>
+          )}
         </div>
       </ContainerContent>
       <ContainerContent>

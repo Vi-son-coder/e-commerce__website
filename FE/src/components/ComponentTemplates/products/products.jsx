@@ -9,7 +9,7 @@ function Product({
   price,
   discountPercentage,
   rating,
-  images,
+  images = [],
   sold,
   bgVoucherColor,
   voucher,
@@ -24,7 +24,7 @@ function Product({
       <div
         style={{ background: bgColor }}
         className="flex flex-col p-3 w-fit rounded-xl shrink-0 min-w-[170px] max-w-[180px] gap-1 h-full"
-        onClick={() => trackAction('VIEW_PRODUCT',id)}
+        onClick={() => trackAction("VIEW_PRODUCT", id)}
       >
         <div className="relative">
           <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`-${discountPercentage}%`}</p>
@@ -42,7 +42,7 @@ function Product({
         >
           {voucher}
         </p>
-        <p className="flex items-center gap-1 text-[12px] ">
+        <div className="flex items-center gap-1 text-[12px] ">
           {
             <>
               <svg
@@ -55,7 +55,7 @@ function Product({
               <p className="text-[#73747f] font-medium">{`(${sold} đã bán)`}</p>
             </>
           }
-        </p>
+        </div>
         <div className="flex justify-between items-center">
           <div>
             <p

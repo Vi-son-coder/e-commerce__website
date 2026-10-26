@@ -1,10 +1,27 @@
 import Product from "../../../components/ComponentTemplates/products/products";
-import { useProducts } from "../../../hooks/useProducts";
-
+import { useState, useEffect } from "react";
 
 // 2. Component chính hiển thị Danh sách gợi ý
-export default function RelatedProductsList() {
-  const {products} = useProducts({limit:7});
+export default function RelatedProductsList({ productId }) {
+  const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    if (!productId) return;
+
+    // Chỉnh lại URL có thêm đoạn "bought-together" cho khớp với Router của BE
+    fetch(
+      `http://localhost:3000/products/recommendations/bought-together/${productId}`,
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          console.log("Danh sách sản phẩm lấy ra:", data.recommendations);
+          // Sửa lại thành data.recommendations để lấy đúng cái mảng sản phẩm
+          setRecommendations(data.recommendations);
+        }
+      })
+      .catch((err) => console.error("Lỗi lấy sản phẩm:", err));
+  }, [productId]);
 
   return (
     <section className="bg-white rounded-2xl p-5 shadow-sm mt-4">
@@ -18,19 +35,19 @@ export default function RelatedProductsList() {
         </span>
       </div>
 
-      {/* Lưới sản phẩm (Grid 6 cột) */}
+      {/* Lưới sản phẩm */}
       <div className="flex gap-4 overflow-auto ">
-        {products?.map(({ _id, ...p }) => (
-          /* Dùng Destructuring + Spread props gọn gàng */
-          <Product
-          key={_id}
-            id={_id}
-            {...p}
-            bgColor="#FAF8FF"
-            textColorPriceSale="#BA1A1A"
-            sold="1,2k"
-          />
-        ))}
+        {recommendations &&
+          recommendations.map(({ _id, ...p }) => (
+            <Product
+              key={_id}
+              id={_id}
+              {...p}
+              bgColor="#FAF8FF"
+              textColorPriceSale="#BA1A1A"
+              sold="1,2k"
+            />
+          ))}
       </div>
     </section>
   );

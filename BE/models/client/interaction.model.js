@@ -29,9 +29,5 @@ const interactionSchema = new mongoose.Schema({
   },
 });
 
-const Interaction = mongoose.model(
-  "Interaction",
-  interactionSchema,
-  "User_behavior",
-);
+const Interaction = mongoose.model("Interaction", interactionSchema,'User_behavior');
 module.exports = Interaction;

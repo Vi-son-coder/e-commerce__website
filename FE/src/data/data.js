@@ -1,4 +1,3 @@
-import pic from "../assets/Galaxy-A50-Mat-truoc-3.jpg";
 import { request } from "../api/request.api";
 let listCategory = [
   "Tất cả danh mục",
@@ -21,7 +20,7 @@ const mockProducts = [
     price: "2.750.000",
     avergeRating: 4.9,
     sold: "1.2k",
-    pic: pic,
+
     voucher: "Freeship Xtra toàn quốc",
   },
   {
@@ -33,16 +32,15 @@ const mockProducts = [
     price: "2.750.000",
     avergeRating: 4.9,
     sold: "1.2k",
-    pic: pic,
     voucher: "Freeship Xtra toàn quốc",
   },
 ];
 
 const user = { username: "emilys", password: "emilyspass" };
 async function getUser() {
-  let User = await request({ reqPATH: "/users", data: user }).then((res) =>
+  let User = (await request({ reqPATH: "/users", data: user }).then((res) =>
     res.json(),
-  );
+  )) || [{ _id: "defaultUserId" }];
   localStorage.setItem("userId", JSON.stringify(User[0]._id));
   return User;
 }
