@@ -11,6 +11,7 @@ import { useProducts } from "../../../hooks/useProducts";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { request } from "../../../api/request.api";
+import { AUTH_CHANGED_EVENT } from "../../../services/auth.storage";
 
 const HERO_BANNERS = [
   {
@@ -41,6 +42,9 @@ function Content() {
   const [aiRecommendations, setAiRecommendations] = useState([]);
   const [aiStatus, setAiStatus] = useState("loading");
   const [recommendationRefresh, setRecommendationRefresh] = useState(0);
+  const [selectedSuggestedCategory, setSelectedSuggestedCategory] =
+    useState("Tất cả");
+  const [showAllSuggested, setShowAllSuggested] = useState(false);
   const [activeBanner, setActiveBanner] = useState(0);
   const [saleSeconds, setSaleSeconds] = useState(2 * 60 * 60 + 15 * 60 + 43);
   const [canScrollCategoriesLeft, setCanScrollCategoriesLeft] = useState(false);
@@ -251,6 +255,14 @@ function Content() {
       isActive = false;
     };
   }, [recommendationRefresh]);
+
+  useEffect(() => {
+    const refreshRecommendations = () =>
+      setRecommendationRefresh((value) => value + 1);
+    window.addEventListener(AUTH_CHANGED_EVENT, refreshRecommendations);
+    return () =>
+      window.removeEventListener(AUTH_CHANGED_EVENT, refreshRecommendations);
+  }, []);
 
   const categorySectionRef = useRef(null);
   const location = useLocation();
@@ -549,14 +561,30 @@ function Content() {
           id="recommendations"
           className="market-suggestion-section p-5 rounded-2xl mt-7 gap-5 flex flex-col"
         >
-          <TitleOfSuggestion />
+          <TitleOfSuggestion
+            selectedCategory={selectedSuggestedCategory}
+            onCategoryChange={(category) => {
+              setSelectedSuggestedCategory(category);
+              setShowAllSuggested(false);
+            }}
+          />
           <div ref={categorySectionRef}>
-            <Outlet />
+            <Outlet
+              context={{
+                selectedSuggestedCategory,
+                recommendationRefresh,
+                showAllSuggested,
+              }}
+            />
           </div>
-          <div className="flex justify-center ">
-            <div className=" flex items-center gap-2 bg-white p-[10px_40px] rounded-[7px]">
-              <button className="cursor-pointer text-[15px] font-bold !text-[#004AC6]">
-                Xem thêm sản phẩm gợi ý
+          <div className="flex justify-center">
+            <div className="flex items-center gap-2 bg-white p-[10px_40px] rounded-[7px]">
+              <button
+                type="button"
+                className="cursor-pointer text-[15px] font-bold !text-[#004AC6]"
+                onClick={() => setShowAllSuggested((showAll) => !showAll)}
+              >
+                {showAllSuggested ? "Thu gọn sản phẩm" : "Xem thêm sản phẩm gợi ý"}
               </button>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -564,7 +592,7 @@ function Content() {
                 viewBox="0 0 24 24"
                 strokeWidth={2}
                 stroke="currentColor"
-                className="size-3 text-[#004AC6]"
+                className={`size-3 text-[#004AC6] transition-transform${showAllSuggested ? " rotate-180" : ""}`}
               >
                 <path
                   strokeLinecap="round"

@@ -1,6 +1,7 @@
 from collections import defaultdict
 import math
 import os
+import re
 
 from fastapi import FastAPI, HTTPException
 from mlxtend.frequent_patterns import apriori, association_rules
@@ -113,7 +114,9 @@ def load_apriori_transactions(product_ids):
     session_products = defaultdict(set)
     behaviors = user_behavior_collection.find(
         {
-            "actionType": {"$in": ["VIEW_PRODUCT", "ADD_TO_CART"]},
+            "actionType": {
+                "$in": ["VIEW_PRODUCT", "ADD_TO_CART", "PURCHASE"]
+            },
             "sessionId": {"$ne": None},
             "targetId": {"$ne": None},
         },
@@ -134,6 +137,11 @@ def load_apriori_transactions(product_ids):
 
 
 def get_apriori_scores(product_ids, seed_product_id=None):
+    seed_product_ids = (
+        set(seed_product_id)
+        if isinstance(seed_product_id, (set, list, tuple))
+        else {seed_product_id} if seed_product_id else set()
+    )
     transactions = load_apriori_transactions(product_ids)
     if not transactions:
         return {}
@@ -168,17 +176,17 @@ def get_apriori_scores(product_ids, seed_product_id=None):
     )
     scores = {}
     for rule in rules.itertuples():
-        if seed_product_id and seed_product_id not in rule.antecedents:
+        if seed_product_ids and not seed_product_ids.intersection(rule.antecedents):
             continue
 
         rule_score = float(rule.confidence) * float(rule.lift)
         if not math.isfinite(rule_score):
             continue
-        if seed_product_id is None:
+        if not seed_product_ids:
             rule_score *= float(rule.support)
 
         for product_id in rule.consequents:
-            if product_id != seed_product_id:
+            if product_id not in seed_product_ids:
                 scores[product_id] = max(scores.get(product_id, 0), rule_score)
 
     return scores
@@ -190,9 +198,15 @@ def read_root():
 
 
 @app.get("/recommendations/home")
-def get_home_recommendations(limit: int = 7):
+def get_home_recommendations(limit: int = 7, user_id=None):
     try:
         limit = max(1, min(limit, 20))
+        mongo_user_id = None
+        if user_id:
+            if not ObjectId.is_valid(user_id):
+                raise HTTPException(status_code=400, detail="Invalid user ID")
+            mongo_user_id = ObjectId(user_id)
+
         product_filter = {"status": "active", "deleted": False}
         projection = {
             "_id": 1,
@@ -203,72 +217,172 @@ def get_home_recommendations(limit: int = 7):
             "rating": 1,
             "images": 1,
             "category": 1,
+            "description": 1,
+            "keywords": 1,
+            "tags": 1,
         }
         products = list(products_collection.find(product_filter, projection))
         if not products:
             return {
                 "success": True,
-                "source": "MongoDB_Interaction_Ranking",
+                "source": "Global_Interaction_Ranking",
                 "recommendations": [],
             }
 
         product_ids = [str(product["_id"]) for product in products]
-        scores = {product_id: 0 for product_id in product_ids}
-        action_weights = {"VIEW_PRODUCT": 1, "ADD_TO_CART": 3}
+        products_by_id = {str(product["_id"]): product for product in products}
+        action_weights = {"VIEW_PRODUCT": 1, "ADD_TO_CART": 3, "PURCHASE": 5}
+        behavior_filter = {
+            "targetId": {"$in": product_ids},
+            "actionType": {"$in": list(action_weights)},
+        }
+        if mongo_user_id:
+            behavior_filter["userId"] = mongo_user_id
 
-        behaviors = user_behavior_collection.find(
-            {"targetId": {"$in": product_ids}},
+        interaction_counts = dict.fromkeys(product_ids, 0)
+        for behavior in user_behavior_collection.find(
+            behavior_filter,
             {"targetId": 1, "actionType": 1},
-        )
-        for behavior in behaviors:
-            product_id = behavior.get("targetId")
-            scores[product_id] += action_weights.get(behavior.get("actionType"), 0)
+        ):
+            product_id = str(behavior.get("targetId"))
+            if product_id in interaction_counts:
+                interaction_counts[product_id] += action_weights[
+                    behavior["actionType"]
+                ]
 
-        users = users_collection.find({}, {"cart": 1})
-        for user in users:
-            cart = user.get("cart") or []
-            if not isinstance(cart, list):
-                continue
-            for item in cart:
-                if isinstance(item, dict):
-                    product_id = str(item.get("_id", ""))
-                    if product_id in scores:
-                        scores[product_id] += 3
-
-        apriori_scores = get_apriori_scores(product_ids)
-        max_interaction_score = max(scores.values(), default=0)
-        max_apriori_score = max(apriori_scores.values(), default=0)
-
-        def homepage_score(product):
-            product_id = str(product["_id"])
-            interaction_score = (
-                scores[product_id] / max_interaction_score
-                if max_interaction_score
-                else 0
+        personalized = bool(mongo_user_id and any(interaction_counts.values()))
+        if personalized:
+            seed_product_ids = {
+                product_id
+                for product_id, count in sorted(
+                    interaction_counts.items(),
+                    key=lambda item: item[1],
+                    reverse=True,
+                )[:5]
+                if count > 0
+            }
+            excluded_product_ids = {
+                product_id
+                for product_id, count in interaction_counts.items()
+                if count > 0
+            }
+            apriori_scores = get_apriori_scores(
+                product_ids, seed_product_id=seed_product_ids
             )
-            apriori_score = (
-                apriori_scores.get(product_id, 0) / max_apriori_score
-                if max_apriori_score
-                else 0
-            )
-            rating_score = min(float(product.get("rating") or 0) / 5, 1)
-            return (
-                0.45 * apriori_score
-                + 0.35 * interaction_score
-                + 0.2 * rating_score,
-                rating_score,
+            max_apriori_score = max(apriori_scores.values(), default=0)
+            total_seed_weight = sum(
+                interaction_counts[product_id] for product_id in seed_product_ids
             )
 
-        products.sort(key=homepage_score, reverse=True)
+            stop_words = {
+                "của", "cho", "các", "những", "một", "với", "và", "hoặc",
+                "trong", "trên", "dưới", "sản", "phẩm", "chính", "hãng",
+                "cao", "cấp", "mới", "sale", "giảm", "giá", "the", "and",
+                "with", "for", "new", "pro",
+            }
+
+            def product_keywords(product):
+                values = [
+                    product.get("title", ""),
+                    product.get("description", ""),
+                    product.get("category", ""),
+                    product.get("brand", ""),
+                    product.get("keywords", ""),
+                    product.get("tags", ""),
+                ]
+                text = " ".join(
+                    " ".join(value) if isinstance(value, list) else str(value or "")
+                    for value in values
+                ).lower()
+                return {
+                    word
+                    for word in re.findall(r"[^\W\d_]+", text, flags=re.UNICODE)
+                    if len(word) > 2 and word not in stop_words
+                }
+
+            seed_products = [
+                products_by_id[product_id]
+                for product_id in seed_product_ids
+                if product_id in products_by_id
+            ]
+            seed_keywords = {
+                product_id: product_keywords(product)
+                for product_id, product in (
+                    (str(product["_id"]), product) for product in seed_products
+                )
+            }
+
+            def personalized_score(product):
+                product_id = str(product["_id"])
+                if product_id in excluded_product_ids:
+                    return None
+
+                candidate_keywords = product_keywords(product)
+                score = 0
+                for seed in seed_products:
+                    seed_id = str(seed["_id"])
+                    weight = interaction_counts[seed_id] / total_seed_weight
+                    brand_match = bool(
+                        seed.get("brand")
+                        and product.get("brand")
+                        and str(seed["brand"]).casefold()
+                        == str(product["brand"]).casefold()
+                    )
+                    category_match = bool(
+                        seed.get("category")
+                        and product.get("category")
+                        and str(seed["category"]).casefold()
+                        == str(product["category"]).casefold()
+                    )
+                    keyword_match = len(
+                        seed_keywords[seed_id] & candidate_keywords
+                    ) / max(len(seed_keywords[seed_id]), 1)
+                    association_score = (
+                        apriori_scores.get(product_id, 0) / max_apriori_score
+                        if max_apriori_score
+                        else 0
+                    )
+                    score += weight * (
+                        4 * brand_match
+                        + 3 * category_match
+                        + 2 * keyword_match
+                        + association_score
+                    )
+
+                if score == 0:
+                    return None
+                rating_score = min(float(product.get("rating") or 0) / 5, 1)
+                return score, rating_score
+
+            scored_products = []
+            for product in products:
+                score = personalized_score(product)
+                if score is not None:
+                    scored_products.append((score, product))
+            scored_products.sort(key=lambda item: item[0], reverse=True)
+            products = [product for _, product in scored_products]
+            source = "Personalized_Content_Related"
+        else:
+            products.sort(
+                key=lambda product: (
+                    interaction_counts[str(product["_id"])],
+                    float(product.get("rating") or 0),
+                ),
+                reverse=True,
+            )
+            source = "Global_Popular_Interactions"
+
         recommendations = products[:limit]
         for product in recommendations:
             product["_id"] = str(product["_id"])
 
         return {
             "success": True,
-            "source": "Apriori_Interaction_Ranking" if apriori_scores else "MongoDB_Interaction_Ranking",
+            "source": source,
             "recommendations": recommendations,
         }
+    except HTTPException:
+        raise
     except Exception as error:
         print(f"Error loading homepage recommendations: {error}")
         raise HTTPException(status_code=500, detail="Unable to load recommendations")

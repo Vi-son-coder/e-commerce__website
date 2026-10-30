@@ -1,5 +1,6 @@
 
 import { request } from "../api/request.api";
+import { trackAction } from "./tracking.service";
 
 export const CART_CHANGED_EVENT = "nova-cart-changed";
 
@@ -22,7 +23,12 @@ export async function addToCart(productId, quantity) {
     data: { product, quantity },
   });
   const data = await response.json();
-  if (response.ok) notifyCartChanged();
+  if (response.ok) {
+    notifyCartChanged();
+    if (Number(quantity) > 0) {
+      trackAction("ADD_TO_CART", productId, { quantity });
+    }
+  }
   return { data, ok: response.ok };
 }
 
@@ -33,7 +39,10 @@ export async function removeFromCart(productId) {
     data: { productId },
   });
   const data = await response.json();
-  if (response.ok) notifyCartChanged();
+  if (!response.ok) {
+    throw new Error(data.message || "Không thể xóa sản phẩm khỏi giỏ hàng");
+  }
+  notifyCartChanged();
   return data;
 }
 

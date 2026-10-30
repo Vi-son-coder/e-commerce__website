@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../../controllers/client/product.controller");
-router.get("/recommendations/home", productController.getHomeRecommendations);
+const optionalAuth = require("../../middlewares/client/auth.middleware").optional;
+router.get(
+  "/recommendations/home",
+  optionalAuth,
+  productController.getHomeRecommendations,
+);
 router.get(
   "/recommendations/bought-together/:productId",
   productController.getFrequentlyBoughtTogether,

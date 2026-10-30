@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addToCart } from "../../../services/cart.service";
 import NotificationAddToCart from "./NotificationAddToCart";
-import { trackAction } from "../../../services/tracking.service";
 import { formatUsdAsVnd } from "../../../utils/currency";
 import { getCurrentUser } from "../../../services/auth.storage";
 
@@ -226,7 +225,6 @@ export default function ProductDetail({ product }) {
           <button
             onClick={() => {
               handleAddToCartAlert(product?._id, quantityClick);
-              trackAction("ADD_TO_CART", product?._id);
             }}
             className="flex-1 py-3 border border-blue-600 text-blue-600 font-medium rounded-xl hover:bg-blue-50"
           >

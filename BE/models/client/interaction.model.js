@@ -12,7 +12,13 @@ const interactionSchema = new mongoose.Schema({
   },
   actionType: {
     type: String,
-    enum: ["VIEW_PRODUCT", "CLICK_CATEGORY", "SEARCH", "ADD_TO_CART"],
+    enum: [
+      "VIEW_PRODUCT",
+      "CLICK_CATEGORY",
+      "SEARCH",
+      "ADD_TO_CART",
+      "PURCHASE",
+    ],
     required: true,
   },
   targetId: {

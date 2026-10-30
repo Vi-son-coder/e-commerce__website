@@ -3,7 +3,7 @@ const Interaction = require("../../models/client/interaction.model");
 module.exports.index = async (req, res) => {
   try {
     const { sessionId, actionType, targetId, metadata } = req.body;
-    const userId = req.user ? req.user.id : null;
+    const userId = req.userId || null;
     await Interaction.create({
       userId,
       sessionId,

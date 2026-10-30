@@ -1,26 +1,19 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { formatUsdAsVnd } from "../../../utils/currency";
+import { trackAction } from "../../../services/tracking.service";
 
 export default function OrderSummary({ products }) {
-  const [priceTemporary, setPriceTemporary] = useState(0);
-  const [discount, setDiscount] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
-  useEffect(() => {
-    async function payment() {
-      let priceTem = 0;
-      let priceDiscount = 0;
-
-      products.forEach((p) => {
-        priceTem += p.price * p.quantity;
-        priceDiscount += (p.price * p.discountPercentage * p.quantity) / 100;
-      });
-      await setPriceTemporary(priceTem);
-      await setDiscount(priceDiscount);
-      await setTotalPrice(priceTem - priceDiscount);
-    }
-    payment();
-  }, []);
+  const navigate = useNavigate();
+  const { priceTemporary, discount } = products.reduce(
+    (totals, product) => {
+      totals.priceTemporary += product.price * product.quantity;
+      totals.discount +=
+        (product.price * product.discountPercentage * product.quantity) / 100;
+      return totals;
+    },
+    { priceTemporary: 0, discount: 0 },
+  );
+  const totalPrice = priceTemporary - discount;
   return (
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
       <div className="flex justify-between items-center pb-3 border-b mb-3">
@@ -69,11 +62,24 @@ export default function OrderSummary({ products }) {
         </div>
       </div>
 
-      <Link to="/ConfirmPaymentPage">
-        <button className="w-full bg-blue-700 hover:bg-blue-800 !text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 mb-3">
-          🔒 Thanh toán ➔
-        </button>
-      </Link>
+      <button
+        type="button"
+        onClick={() => {
+          products.forEach((product) =>
+            trackAction("PURCHASE", product._id, {
+              quantity: product.quantity,
+            }),
+          );
+          navigate("/ConfirmPaymentPage", {
+            state: {
+              purchasedProductIds: products.map((product) => product._id),
+            },
+          });
+        }}
+        className="w-full bg-blue-700 hover:bg-blue-800 !text-white font-bold py-3 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 mb-3"
+      >
+        🔒 Thanh toán ➔
+      </button>
 
       <p className="text-[11px] text-gray-400 text-center mb-4">
         Bằng việc bấm Đặt hàng, bạn đồng ý với{" "}

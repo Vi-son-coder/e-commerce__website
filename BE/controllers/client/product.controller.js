@@ -26,7 +26,12 @@ module.exports.getHomeRecommendations = async (req, res) => {
   try {
     const pythonResponse = await axios.get(
       "http://localhost:8000/recommendations/home",
-      { params: { limit } },
+      {
+        params: {
+          limit,
+          ...(req.userId ? { user_id: req.userId } : {}),
+        },
+      },
     );
     return res.status(200).json(pythonResponse.data);
   } catch (error) {

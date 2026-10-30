@@ -8,12 +8,15 @@ export async function trackAction(actionType, targetId, metadata = {}) {
         "sess_" + Math.random().toString(36).substring(2, 15) + Date.now();
       localStorage.setItem("sessionId", sessionId);
     }
-    request({
+    const response = await request({
       reqPATH: "/api/tracking",
       method: "POST",
       data: { sessionId, actionType, targetId, metadata },
-    }).catch((err) => console.log.error("Tracking error", err));
+    });
+    if (!response.ok) {
+      console.error("Tracking request failed", response.status);
+    }
   } catch (error) {
-    console.log(error);
+    console.error("Tracking error", error);
   }
 }
