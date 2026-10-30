@@ -10,7 +10,7 @@ import OrderActions from '../components/OrderActions';
 export default function OrderTrackingPage() {
   return (
     
-      <div className="flex flex-col mt-13">
+      <div className="order-tracking-page flex flex-col mt-13">
         {/* Header & Status Bar */}
         <OrderHeader orderId="NM-84920491" />
         <OrderStatusTracker />

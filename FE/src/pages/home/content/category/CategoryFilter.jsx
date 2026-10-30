@@ -21,7 +21,7 @@ export default function CatgoryFilter() {
   }, [category]);
   console.log(products);
   return (
-    <div className="gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+    <div className="product-list-page gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
       {products?.map(({ _id, ...p }) => {
         return (
           <Product

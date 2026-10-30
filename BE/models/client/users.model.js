@@ -9,6 +9,9 @@ const userSchema = new mongoose.Schema({
   phone: String,
   username: String,
   password: String,
+  isAdmin: { type: Boolean, default: false },
+  authTokenHash: { type: String, select: false },
+  authTokenExpiresAt: { type: Date, select: false },
   images: String,
   cart: {
     type: mongoose.Schema.Types.Mixed, // Cho phép chứa toàn bộ object sản phẩm + quantity bên trong

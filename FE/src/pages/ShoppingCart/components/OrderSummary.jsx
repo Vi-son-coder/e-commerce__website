@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import NotificationModule from "../../../components/ComponentTemplates/NotificationModule";
+import { formatUsdAsVnd } from "../../../utils/currency";
 export default function OrderSummary({ products }) {
   const [priceTemporary, setPriceTemporary] = useState(0);
   const [quantityProducts, setQuantityProducts] = useState(0);
@@ -19,24 +20,26 @@ export default function OrderSummary({ products }) {
         priceTem += p.price * p.quantity;
         priceDiscount += (p.price * p.discountPercentage * p.quantity) / 100;
       });
-      await setPriceTemporary(priceTem.toFixed(0));
-      await setDiscount(priceDiscount.toFixed(0));
-      await setTotalPrice(priceTem.toFixed(0) - priceDiscount.toFixed(0));
+      await setPriceTemporary(priceTem);
+      await setDiscount(priceDiscount);
+      await setTotalPrice(priceTem - priceDiscount);
     }
     payment();
   }, [products]);
   return (
-    <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+    <div className="cart-summary-card bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-4">
       <h3 className="font-bold text-gray-900 text-base">Tóm tắt đơn hàng</h3>
 
       <div className="space-y-2.5 text-sm border-b border-gray-100 pb-4">
         <div className="flex justify-between text-gray-600">
           <span>Tạm tính ({quantityProducts} sản phẩm):</span>
-          <span className="font-bold text-gray-900">{priceTemporary}.000đ</span>
+          <span className="font-bold text-gray-900">
+            {formatUsdAsVnd(priceTemporary)}
+          </span>
         </div>
         <div className="flex justify-between text-emerald-600 font-medium">
           <span>🎁 Giảm giá sản phẩm:</span>
-          <span className="font-bold">-{discount}.000đ</span>
+          <span className="font-bold">-{formatUsdAsVnd(discount)}</span>
         </div>
       </div>
 
@@ -47,7 +50,7 @@ export default function OrderSummary({ products }) {
             Tổng thanh toán:
           </span>
           <span className="text-2xl font-black text-red-600">
-            {totalPrice}.000đ
+            {formatUsdAsVnd(totalPrice)}
           </span>
         </div>
       </div>

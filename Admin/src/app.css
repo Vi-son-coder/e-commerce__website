@@ -1,0 +1,153 @@
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #20243a;
+  background: #f7f7fb;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-login-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(
+      ellipse at 12% 10%,
+      rgb(175 164 255 / 24%),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 90% 92%,
+      rgb(176 194 255 / 22%),
+      transparent 32%
+    ),
+    #f7f7fb;
+}
+
+.admin-login-card {
+  width: min(100%, 410px);
+  padding: 34px;
+  border: 1px solid #edecf2;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 18px 55px rgb(34 33 67 / 8%);
+}
+
+.admin-login-card > .admin-brand {
+  display: inline-flex;
+  margin-bottom: 36px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-login-card > .admin-eyebrow {
+  margin-bottom: 9px;
+}
+
+.admin-login-card h1 {
+  margin: 0;
+  color: #22263c;
+  font-size: 25px;
+  letter-spacing: -0.8px;
+}
+
+.admin-login-description {
+  margin: 9px 0 23px;
+  color: #85899d;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.admin-login-form {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-login-form label {
+  display: grid;
+  gap: 7px;
+  color: #5a5e72;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.admin-login-form input {
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 11px;
+  border: 1px solid #e7e7ef;
+  border-radius: 8px;
+  outline: none;
+  background: #fdfdff;
+  color: #373b50;
+  font-size: 12px;
+}
+
+.admin-login-form input:focus {
+  border-color: #9b8ff0;
+  box-shadow: 0 0 0 3px rgb(109 92 232 / 10%);
+}
+
+.admin-login-form .admin-button {
+  width: 100%;
+  min-height: 43px;
+  margin-top: 3px;
+  cursor: pointer;
+  color: black;
+  background: #9b8ff0;
+  color: white;
+}
+
+.admin-login-form .admin-button:disabled {
+  cursor: wait;
+}
+
+.admin-login-error {
+  margin: 0;
+  color: #bb4037;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.admin-login-store-link {
+  display: inline-block;
+  margin-top: 21px;
+  color: #75798d;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.admin-login-store-link:hover {
+  color: #5d4bd7;
+}
+
+@media (max-width: 480px) {
+  .admin-login-card {
+    padding: 25px 21px;
+  }
+}

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { formatUsdAsVnd } from "../../../utils/currency";
 
 export default function OrderSummary({ products }) {
   const [priceTemporary, setPriceTemporary] = useState(0);
@@ -14,9 +15,9 @@ export default function OrderSummary({ products }) {
         priceTem += p.price * p.quantity;
         priceDiscount += (p.price * p.discountPercentage * p.quantity) / 100;
       });
-      await setPriceTemporary(priceTem.toFixed(0));
-      await setDiscount(priceDiscount.toFixed(0));
-      await setTotalPrice(priceTem.toFixed(0) - priceDiscount.toFixed(0));
+      await setPriceTemporary(priceTem);
+      await setDiscount(priceDiscount);
+      await setTotalPrice(priceTem - priceDiscount);
     }
     payment();
   }, []);
@@ -32,11 +33,15 @@ export default function OrderSummary({ products }) {
       <div className="space-y-2 text-xs mb-4">
         <div className="flex justify-between text-gray-600">
           <span>Tổng tiền hàng ({products.length} món):</span>
-          <span className="font-semibold text-gray-800">{priceTemporary}đ</span>
+          <span className="font-semibold text-gray-800">
+            {formatUsdAsVnd(priceTemporary)}
+          </span>
         </div>
         <div className="flex justify-between text-gray-600">
           <span>Giảm giá trực tiếp shop:</span>
-          <span className="font-semibold text-red-600">-{discount}đ</span>
+          <span className="font-semibold text-red-600">
+            -{formatUsdAsVnd(discount)}
+          </span>
         </div>
         <div className="flex justify-between text-gray-600">
           <span>Phí vận chuyển thực tế:</span>
@@ -59,7 +64,7 @@ export default function OrderSummary({ products }) {
             TỔNG THANH TOÁN
           </span>
           <span className="font-extrabold text-red-600 text-2xl">
-            {totalPrice}đ
+            {formatUsdAsVnd(totalPrice)}
           </span>
         </div>
       </div>

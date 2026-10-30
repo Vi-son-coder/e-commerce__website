@@ -1,11 +1,10 @@
+import { formatUsdAsVnd } from "../../../utils/currency";
+
 export default function PackageItem({ product = null }) {
-  const formatCurrency = (amount) => {
-    return amount.toLocaleString("vi-VN") + "đ";
-  };
   let newPrice = (
     (product?.price * (100 - product?.discountPercentage)) /
     100
-  ).toFixed(0);
+  );
   return (
     <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
       {/* Khối bên trái: Ảnh + Thông tin sản phẩm */}
@@ -32,11 +31,11 @@ export default function PackageItem({ product = null }) {
       {/* Khối bên phải: Giá tiền */}
       <div className="flex flex-col items-end justify-center pl-4">
         <span className="text-black font-bold text-lg leading-tight">
-          {formatCurrency(newPrice)}
+          {formatUsdAsVnd(newPrice)}
         </span>
         {product?.price && (
           <span className="text-gray-400 text-sm line-through mt-0.5">
-            {formatCurrency(product?.price)}
+            {formatUsdAsVnd(product?.price)}
           </span>
         )}
       </div>

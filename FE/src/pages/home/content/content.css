@@ -1,4 +1,6 @@
 
 .bgLeftContainer{
-    background: linear-gradient(70deg, #0049C6, #2160E7,#7C42E6);
+    background:
+        radial-gradient(ellipse at 83% 12%, rgb(179 165 255 / 74%), transparent 32%),
+        linear-gradient(125deg, #282445, #5146a0 62%, #7568cf);
 }

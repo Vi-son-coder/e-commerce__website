@@ -11,10 +11,13 @@ import OrderTrackingPage from "./pages/OrderTracking/page/OrderTrackingPage";
 import ProductPage from "./pages/ProductPage/ProductPage";
 import ProductsSuggested from "./pages/home/content/productSuggested/ProductsSuggested";
 import CatgoryFilter from "./pages/home/content/category/CategoryFilter";
+import AuthPage from "./pages/AuthPage";
 function App() {
   return (
     <>
       <Routes>
+        <Route path="/login" element={<AuthPage mode="login" />} />
+        <Route path="/register" element={<AuthPage mode="register" />} />
         {/* Route Cha chứa Layout chung */}
         <Route path="/" element={<MainLayout />}>
           {/*index: Trang chủ mặc định -> rơi vào vị trí Outlet */}

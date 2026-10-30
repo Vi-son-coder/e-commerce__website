@@ -5,7 +5,7 @@ import { CategoryBtnInContent } from "../../../components/ComponentTemplates/cat
 export default function SortBar() {
   const [selectTab, setSelectTab] = useState("Phổ biến");
   return (
-    <div className="bg-white p-3 rounded-lg shadow-sm flex items-center justify-between text-xs mb-4">
+    <div className="market-sortbar bg-white p-3 rounded-lg shadow-sm flex items-center justify-between text-xs mb-4">
       <div className="flex items-center space-x-2">
         <span className="text-gray-500 font-medium">SẮP XẾP:</span>
         <CategoryBtnInContent

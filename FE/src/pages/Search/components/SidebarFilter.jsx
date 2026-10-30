@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { formatVndNumber } from "../../../utils/currency";
 
 const FILTER_KEYS = [
   "brand",
@@ -12,8 +13,12 @@ const FILTER_KEYS = [
 export default function SidebarFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [brand, setBrand] = useState(searchParams.get("brand") || "");
-  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
-  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
+  const [minPrice, setMinPrice] = useState(
+    formatPriceInput(searchParams.get("minPrice") || ""),
+  );
+  const [maxPrice, setMaxPrice] = useState(
+    formatPriceInput(searchParams.get("maxPrice") || ""),
+  );
   const [minRating, setMinRating] = useState(
     searchParams.get("minRating") || "",
   );
@@ -21,10 +26,25 @@ export default function SidebarFilter() {
     searchParams.get("minDiscount") || "",
   );
 
+  function formatPriceInput(value) {
+    const digits = value.replace(/\D/g, "");
+    return digits ? formatVndNumber(digits) : "";
+  }
+
+  function getPriceDigits(value) {
+    return value.replace(/\D/g, "");
+  }
+
   function applyFilters(event) {
     event.preventDefault();
     const nextParams = new URLSearchParams(searchParams);
-    const filters = { brand, minPrice, maxPrice, minRating, minDiscount };
+    const filters = {
+      brand,
+      minPrice: getPriceDigits(minPrice),
+      maxPrice: getPriceDigits(maxPrice),
+      minRating,
+      minDiscount,
+    };
 
     for (const [key, value] of Object.entries(filters)) {
       if (value) nextParams.set(key, value);
@@ -46,7 +66,7 @@ export default function SidebarFilter() {
   }
 
   return (
-    <aside className="w-64 bg-white p-4 rounded-lg shadow-sm space-y-6 text-xs text-gray-700">
+    <aside className="market-filter-panel w-64 bg-white p-4 rounded-lg shadow-sm space-y-6 text-xs text-gray-700">
       <div className="flex justify-between items-center border-b pb-2">
         <h3 className="font-bold text-sm text-gray-800">Bộ lọc tìm kiếm</h3>
         <button
@@ -73,20 +93,20 @@ export default function SidebarFilter() {
         <h4 className="font-semibold mb-2 text-gray-800">Khoảng giá (đ)</h4>
         <div className="flex items-center space-x-2 mb-2">
           <input
-            type="number"
-            min="0"
+            type="text"
+            inputMode="numeric"
             value={minPrice}
-            onChange={(event) => setMinPrice(event.target.value)}
+            onChange={(event) => setMinPrice(formatPriceInput(event.target.value))}
             placeholder="Từ"
             aria-label="Giá tối thiểu"
             className="w-full min-w-0 border rounded p-2 text-center"
           />
           <span>-</span>
           <input
-            type="number"
-            min="0"
+            type="text"
+            inputMode="numeric"
             value={maxPrice}
-            onChange={(event) => setMaxPrice(event.target.value)}
+            onChange={(event) => setMaxPrice(formatPriceInput(event.target.value))}
             placeholder="Đến"
             aria-label="Giá tối đa"
             className="w-full min-w-0 border rounded p-2 text-center"

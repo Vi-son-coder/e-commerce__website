@@ -5,8 +5,9 @@ import PaymentPage from "../../Payment/pages/PaymentPage";
 
 import { getProductsInCart } from "../../../services/cart.service";
 import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import CartList from "../components/CartList";
+import { getCurrentUser } from "../../../services/auth.storage";
 
 export default function CartPage() {
   const [productsInCart, setProductsInCart] = useState([]);
@@ -55,7 +56,7 @@ export default function CartPage() {
     setProductsInCart(updateProducts);
   }
   return (
-    <div className=" mt-13">
+    <div className="cart-page">
       {/* Breadcrumb & Stepper Component */}
 
       <Routes>
@@ -65,7 +66,23 @@ export default function CartPage() {
             <>
               <BreadcrumbAndStepper itemCount={productsInCart.length} />
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {!getCurrentUser() ? (
+                <section className="rounded-2xl border border-gray-100 bg-white p-8 text-center shadow-sm">
+                  <h1 className="text-xl font-bold text-gray-900">
+                    Đăng nhập để xem giỏ hàng
+                  </h1>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Đăng nhập hoặc tạo tài khoản để lưu sản phẩm trong giỏ hàng.
+                  </p>
+                  <Link
+                    className="mt-5 inline-flex rounded-lg bg-red-500 px-5 py-3 font-semibold text-white no-underline hover:bg-red-600"
+                    to="/login?redirect=%2FCartPage"
+                  >
+                    Đăng nhập
+                  </Link>
+                </section>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* CỘT TRÁI */}
                 <CartList
                   productsInCart={productsInCart}
@@ -81,6 +98,7 @@ export default function CartPage() {
                   <OrderSummary products={productsInCart} />
                 </div>
               </div>
+              )}
             </>
           }
         />

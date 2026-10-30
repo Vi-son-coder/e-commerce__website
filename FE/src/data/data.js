@@ -1,4 +1,3 @@
-import { request } from "../api/request.api";
 let listCategory = [
   "Tất cả danh mục",
   "Điện tử",
@@ -36,12 +35,4 @@ const mockProducts = [
   },
 ];
 
-const user = { username: "emilys", password: "emilyspass" };
-async function getUser() {
-  let User = (await request({ reqPATH: "/users", data: user }).then((res) =>
-    res.json(),
-  )) || [{ _id: "defaultUserId" }];
-  localStorage.setItem("userId", JSON.stringify(User[0]._id));
-  return User;
-}
-export { listCategory, mockProducts, getUser };
+export { listCategory, mockProducts };

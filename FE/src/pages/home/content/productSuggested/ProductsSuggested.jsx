@@ -3,7 +3,7 @@ import { useProducts } from "../../../../hooks/useProducts";
 
 export default function ProductsSuggested() {
   const data = {
-    limit: 21,
+    limit: 18,
   };
   const { products } = useProducts(data);
 

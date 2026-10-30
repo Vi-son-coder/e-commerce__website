@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { addToCart, removeFromCart } from "../../../services/cart.service";
+import { formatUsdAsVnd } from "../../../utils/currency";
 
 const ProductInCart = ({
   product = [],
@@ -8,13 +9,9 @@ const ProductInCart = ({
   getQuantity = [],
 }) => {
   const [quantity, setQuantity] = useState(product?.quantity);
-  // Định dạng tiền tệ Việt Nam (VNĐ)
   const [step, setStep] = useState(0);
   const [checked, setChecked] = useState(false);
 
-  const formatCurrency = (amount) => {
-    return amount.toLocaleString("vi-VN") + "đ";
-  };
   async function quantityChange(number) {
     const newQuantity = quantity + number;
     console.log(newQuantity);
@@ -39,12 +36,12 @@ const ProductInCart = ({
     addToCart(product?._id, step);
   }, [quantity]);
 
-  let newPrice = (
+  const newPrice = (
     (product?.price * (100 - product?.discountPercentage)) /
     100
-  ).toFixed(0);
+  );
   return (
-    <div className="bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
+    <div className="market-cart-item bg-white p-4 rounded-2xl shadow-sm flex items-center justify-between text-sm font-semibold border border-gray-100">
       {/* Khối bên trái: Ảnh + Thông tin sản phẩm */}
       <div className="flex items-center gap-4">
         {/* checkbox */}
@@ -91,11 +88,11 @@ const ProductInCart = ({
       {/* Khối bên phải: Giá tiền */}
       <div className="flex flex-col items-end justify-center pl-4">
         <span className="text-black font-bold text-lg leading-tight">
-          {formatCurrency(newPrice)}
+          {formatUsdAsVnd(newPrice)}
         </span>
         {product?.price && (
           <span className="text-gray-400 text-sm line-through mt-0.5">
-            {formatCurrency(product?.price)}
+            {formatUsdAsVnd(product?.price)}
           </span>
         )}
       </div>

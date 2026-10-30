@@ -4,12 +4,12 @@ import Footer from "./pages/home/footer/footer";
 
 function MainLayout(){
     return(
-        <div className="flex flex-col">
+        <div className="min-h-screen flex flex-col">
         <Header/>
         {/* Outlet nằm ở giữa Header và Footer để chứa các trang con va nằm ngoài Route cha để các Route con đặt vào vị trí này khi Route con thay đổi*/}
-        <div className="px-[50px]">
+        <main className="market-page-content flex-1">
             <Outlet/>
-        </div>
+        </main>
         <Footer/>
         </div>
     )

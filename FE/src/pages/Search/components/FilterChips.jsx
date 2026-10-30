@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { formatVnd } from "../../../utils/currency";
 
 export default function FilterChips() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -11,9 +12,11 @@ export default function FilterChips() {
     });
   }
   if (searchParams.has("minPrice") || searchParams.has("maxPrice")) {
+    const minPrice = searchParams.get("minPrice");
+    const maxPrice = searchParams.get("maxPrice");
     chips.push({
       key: "price",
-      label: `Giá: ${searchParams.get("minPrice") || "0"}đ - ${searchParams.get("maxPrice") || "không giới hạn"}`,
+      label: `Giá: ${minPrice ? formatVnd(minPrice) : "0đ"} - ${maxPrice ? formatVnd(maxPrice) : "không giới hạn"}`,
       params: ["minPrice", "maxPrice"],
     });
   }

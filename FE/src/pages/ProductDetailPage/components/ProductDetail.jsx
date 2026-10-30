@@ -1,15 +1,29 @@
 import { useState, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { addToCart } from "../../../services/cart.service";
 import NotificationAddToCart from "./NotificationAddToCart";
 import { trackAction } from "../../../services/tracking.service";
+import { formatUsdAsVnd } from "../../../utils/currency";
+import { getCurrentUser } from "../../../services/auth.storage";
 
 export default function ProductDetail({ product }) {
+  const images = Array.isArray(product?.images)
+    ? product.images.filter(Boolean)
+    : [];
+  const [selectedImage, setSelectedImage] = useState({
+    productId: product?._id,
+    index: 0,
+  });
+  const selectedImageIndex =
+    selectedImage.productId === product?._id ? selectedImage.index : 0;
   const newPrice = (
     (product?.price * (100 - product?.discountPercentage)) /
     100
-  ).toFixed(0);
+  );
 
   const [quantityClick, setQuantityClick] = useState(1);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [notification, setNotification] = useState({
     show: false,
@@ -19,47 +33,98 @@ export default function ProductDetail({ product }) {
   let timeoutRef = useRef(null);
 
   async function handleAddToCartAlert(productId, quantity) {
-    let res = await addToCart(productId, quantity);
-    console.log(res);
-    if (res.data && res.ok) {
+    if (!getCurrentUser()) {
+      const redirect = encodeURIComponent(`${location.pathname}${location.search}`);
+      navigate(`/login?redirect=${redirect}`);
+      return;
+    }
+
+    try {
+      const res = await addToCart(productId, quantity);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
       setNotification({
         show: true,
-        message: "Thêm vào giỏ hàng",
+        message: res.ok ? "Đã thêm vào giỏ hàng" : res.data.message || "Thêm vào giỏ hàng thất bại",
         status: res.ok,
       });
-    } else {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      setNotification({ show: true, message: "Thất bại", status: res.ok });
+    } catch (error) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      setNotification({
+        show: true,
+        message: error.message || "Không thể thêm vào giỏ hàng",
+        status: false,
+      });
+    } finally {
+      timeoutRef.current = setTimeout(() => {
+        setNotification({ show: false, message: "" });
+      }, 2500);
     }
-    timeoutRef.current = setTimeout(() => {
-      setNotification({ show: false, message: "" });
-    }, 2000);
   }
   return (
     <div className="bg-white rounded-2xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-12 gap-6">
       {/* Cột trái: Gallery Ảnh */}
       <div className="md:col-span-5">
-        <div className="aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden border-[#e5e5e518] border-1">
-          <img
-            src={product?.images[0]}
-            alt="Keychron Q1 Pro"
-            className="w-full h-full object-cover "
-          />
+        <div className="relative aspect-square bg-gray-100 rounded-xl mb-3 overflow-hidden border-[#e5e5e518] border-1">
+          {images[selectedImageIndex] && (
+            <img
+              src={images[selectedImageIndex]}
+              alt={product?.title || "Ảnh sản phẩm"}
+              className="w-full h-full object-cover"
+            />
+          )}
+          {images.length > 1 && (
+            <>
+              <button
+                aria-label="Xem ảnh trước"
+                className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-xl shadow hover:bg-white"
+                onClick={() => {
+                  const index =
+                    (selectedImageIndex - 1 + images.length) % images.length;
+                  setSelectedImage({ productId: product?._id, index });
+                }}
+                type="button"
+              >
+                ‹
+              </button>
+              <button
+                aria-label="Xem ảnh tiếp theo"
+                className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-white/90 px-3 py-1 text-xl shadow hover:bg-white"
+                onClick={() => {
+                  const index = (selectedImageIndex + 1) % images.length;
+                  setSelectedImage({ productId: product?._id, index });
+                }}
+                type="button"
+              >
+                ›
+              </button>
+            </>
+          )}
         </div>
         {/* List ảnh nhỏ */}
         <div className="flex gap-2">
-          {product?.images.map((i) => (
-            <div
-              key={i}
-              className="w-14 h-14 bg-gray-100 rounded-lg border hover:border-blue-500 cursor-pointer"
+          {images.map((image, index) => (
+            <button
+              aria-label={`Xem ảnh ${index + 1} của ${product?.title || "sản phẩm"}`}
+              aria-pressed={selectedImageIndex === index}
+              className={`w-14 h-14 overflow-hidden rounded-lg border ${
+                selectedImageIndex === index
+                  ? "border-blue-500"
+                  : "border-gray-200 hover:border-blue-500"
+              }`}
+              key={`${image}-${index}`}
+              onClick={() =>
+                setSelectedImage({ productId: product?._id, index })
+              }
+              type="button"
             >
-              <img src={i} alt="ảnh sản phẩm" />
-            </div>
+              <img
+                src={image}
+                alt=""
+                className="h-full w-full object-cover"
+              />
+            </button>
           ))}
         </div>
       </div>
@@ -87,9 +152,11 @@ export default function ProductDetail({ product }) {
 
           {/* Giá */}
           <div className="bg-red-50 p-4 rounded-xl mb-4 flex items-baseline gap-3">
-            <span className="text-2xl font-bold text-red-600">{newPrice}đ</span>
+            <span className="text-2xl font-bold text-red-600">
+              {formatUsdAsVnd(newPrice)}
+            </span>
             <span className="text-sm text-gray-400 line-through">
-              {product?.price}đ
+              {formatUsdAsVnd(product?.price)}
             </span>
             <span className="bg-red-700 text-white text-xs px-2 py-0.5 rounded font-bold">
               -{product?.discountPercentage}%

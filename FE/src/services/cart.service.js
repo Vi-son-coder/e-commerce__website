@@ -1,60 +1,56 @@
 
 import { request } from "../api/request.api";
-import { getUser } from "../data/data";
 
-const userId = JSON.parse(localStorage.getItem("userId"));
+export const CART_CHANGED_EVENT = "nova-cart-changed";
+
+function notifyCartChanged() {
+  window.dispatchEvent(new Event(CART_CHANGED_EVENT));
+}
+
 export async function addToCart(productId, quantity) {
-  try {
-    const PATH = `/users/addToCart?id=${userId}`;
-    const product = await request({
-      reqPATH: `/products/search`,
-      data: { id: productId },
-    }).then((res) => res.json());
-    const data = {
-      product: product,
-      quantity: quantity,
-    };
-    const res = await request({
-      reqPATH: PATH,
-      method: "PATCH",
-      data: data,
-    });
-    const updateCartInUsers = await res.json();
-    return { data: updateCartInUsers, ok: res.ok };
-  } catch (error) {
-    console.log(error);
+  const productResponse = await request({
+    reqPATH: "/products/search",
+    data: { id: productId },
+  });
+  if (!productResponse.ok) {
+    throw new Error("Không thể tải thông tin sản phẩm");
   }
+  const product = await productResponse.json();
+  const response = await request({
+    reqPATH: "/users/addToCart",
+    method: "PATCH",
+    data: { product, quantity },
+  });
+  const data = await response.json();
+  if (response.ok) notifyCartChanged();
+  return { data, ok: response.ok };
 }
 
 export async function removeFromCart(productId) {
-  try {
-    const updateCartInUsers = await request({
-      reqPATH: `/users/removeFromCart?id=${userId}`,
-      method: "DELETE",
-      data: { productId: productId },
-    }).then((p) => p.json());
-    return updateCartInUsers;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request({
+    reqPATH: "/users/removeFromCart",
+    method: "DELETE",
+    data: { productId },
+  });
+  const data = await response.json();
+  if (response.ok) notifyCartChanged();
+  return data;
 }
 
 export async function updateProductInCartInUser(dataUpdate) {
-  try {
-    const updateProductInCart = await request({
-      reqPATH: `/users/updateProductInCart?id=${userId}`,
-      method: "PATCH",
-      data: dataUpdate,
-    }).then((p) => p);
-    return updateProductInCart;
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await request({
+    reqPATH: "/users/updateProductInCart",
+    method: "PATCH",
+    data: dataUpdate,
+  });
+  if (response.ok) notifyCartChanged();
+  return response;
 }
 
 export async function getProductsInCart() {
-  const user = await getUser();
-  let productsInCart = user[0].cart;
-  return productsInCart;
+  const response = await request({ reqPATH: "/users/me" });
+  if (response.status === 401) return [];
+  if (!response.ok) throw new Error("Không thể tải giỏ hàng");
+  const data = await response.json();
+  return data.cart || [];
 }
-

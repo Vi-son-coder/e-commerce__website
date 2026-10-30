@@ -11,7 +11,7 @@ export default function ConfirmPaymentPage() {
   return (
     
 
-      <div className="mt-13">
+      <div className="order-complete-page">
         {/* Banner Đặt hàng thành công */}
         <SuccessHeader />
 

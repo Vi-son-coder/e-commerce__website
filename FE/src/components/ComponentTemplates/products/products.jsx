@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import "./products.css";
 import { trackAction } from "../../../services/tracking.service";
+import { convertUsdToVnd, formatVnd } from "../../../utils/currency";
 
 function Product({
   id,
@@ -17,25 +18,27 @@ function Product({
   textColorPrice,
   textColorPriceSale,
   bgColor,
+  isFlashSale = false,
 }) {
-  const newPrice = ((price * (100 - discountPercentage)) / 100).toFixed(0);
+  const priceInVnd = convertUsdToVnd(price);
+  const newPrice = (priceInVnd * (100 - discountPercentage)) / 100;
   return (
     <Link to={`/ProductDetailPage?productId=${id}`}>
       <div
         style={{ background: bgColor }}
-        className="flex flex-col p-3 w-fit rounded-xl shrink-0 min-w-[170px] max-w-[180px] gap-1 h-full"
+        className={`flex flex-col p-3 w-fit rounded-xl shrink-0 min-w-[170px] max-w-[180px] gap-1 h-full${isFlashSale ? " market-flash-card" : ""}`}
         onClick={() => trackAction("VIEW_PRODUCT", id)}
       >
-        <div className="relative">
-          <p className="absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#BA1A1A] top-2 left-2">{`-${discountPercentage}%`}</p>
+        <div className={`relative${isFlashSale ? " market-flash-card-image" : ""}`}>
+          <p className={`absolute rounded-sm p-[0_7px] text-white text-[12px] font-medium bg-[#F45B24] top-2 left-2${isFlashSale ? " market-flash-discount" : ""}`}>{`-${discountPercentage}%`}</p>
           <img
             src={images[0]}
             alt=""
-            className="object-cover rounded-[15px] aspect-square border-1 border-[#efefef8a]"
+            className="market-product-image object-cover rounded-[15px] aspect-square border-1 border-[#efefef8a]"
           />
         </div>
-        <p className="text-[#787983] text-sm">{brand}</p>
-        <p className="text-[20px] font-medium line-clamp-2 flex-1">{title}</p>
+        <p className="market-product-brand text-[#787983] text-sm">{brand}</p>
+        <p className="market-product-title text-[20px] font-medium line-clamp-2 flex-1">{title}</p>
         <p
           className="rounded-sm font-medium w-fit p-[0_9px] text-[11px] mt-4"
           style={{ backgroundColor: bgVoucherColor, color: textVoucherColor }}
@@ -56,16 +59,16 @@ function Product({
             </>
           }
         </div>
-        <div className="flex justify-between items-center">
-          <div>
+        <div className={`flex justify-between items-center${isFlashSale ? " market-flash-price-row" : ""}`}>
+          <div className="flex flex-col gap-1 text-left">
             <p
               style={{ color: textColorPriceSale }}
-              className=" font-bold text-xl"
-            >{`${newPrice}đ`}</p>
+              className="market-product-price font-bold text-xl"
+            >{formatVnd(newPrice)}</p>
             <p
               style={{ color: textColorPrice }}
               className="line-through text-[13px]"
-            >{`${price ? price + "đ" : " "}`}</p>
+            >{price ? formatVnd(priceInVnd) : " "}</p>
           </div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +76,7 @@ function Product({
             viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className="size-8 p-2 rounded-[8px] bg-[#DBE1FF]"
+            className="market-product-cart size-8 p-2 rounded-[8px] bg-[#DBE1FF]"
           >
             <path
               strokeLinecap="round"
@@ -82,6 +85,12 @@ function Product({
             />
           </svg>
         </div>
+        {isFlashSale && (
+          <div className="market-flash-status" aria-label="Đang bán chạy">
+            <span aria-hidden="true">🔥</span>
+            <strong>ĐANG BÁN CHẠY</strong>
+          </div>
+        )}
       </div>
     </Link>
   );

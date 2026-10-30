@@ -89,7 +89,12 @@ module.exports.search = async (req, res) => {
   const keyword = String(req.query.keyword || "").trim();
   if (keyword) {
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    find.title = new RegExp(escapedKeyword, "i");
+    const keywordPattern = new RegExp(escapedKeyword, "i");
+    find.$or = [
+      { title: keywordPattern },
+      { brand: keywordPattern },
+      { category: keywordPattern },
+    ];
   }
   if (req.query.id) {
     find._id = req.query.id;

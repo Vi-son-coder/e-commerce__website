@@ -3,9 +3,9 @@ button{
     @apply text-gray-600
 }
 .active{
-    @apply !text-blue-700;
+    @apply !text-[#f53d2d];
 }
 
 .activeCategoryBtnInContent{
-    @apply !bg-[#004AC6] !text-white
+    @apply !bg-[#f53d2d] !text-white
 }

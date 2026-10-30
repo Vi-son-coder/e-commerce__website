@@ -6,9 +6,30 @@ import OrderSummary from "../components/OrderSummary";
 export default function PaymentPage({ products }) {
   const packagesData = products?.filter((p) => p.checked == true);
   return (
-    <div>
+    <div className="checkout-page">
+      <div className="checkout-heading">
+        <p className="checkout-eyebrow">Bước 2 · Hoàn tất đơn hàng</p>
+        <h1>Giao hàng & thanh toán</h1>
+        <p>
+          Kiểm tra địa chỉ nhận hàng, sản phẩm và chọn cách thanh toán phù hợp.
+        </p>
+      </div>
+      <ol className="checkout-steps" aria-label="Tiến trình đặt hàng">
+        <li className="is-complete">
+          <span>✓</span>
+          <strong>Giỏ hàng</strong>
+        </li>
+        <li className="is-current">
+          <span>2</span>
+          <strong>Giao hàng & thanh toán</strong>
+        </li>
+        <li>
+          <span>3</span>
+          <strong>Hoàn tất</strong>
+        </li>
+      </ol>
       {/* Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-3">
         {/* Main Left Content */}
         <div className="lg:col-span-2">
           <ShippingAddress />

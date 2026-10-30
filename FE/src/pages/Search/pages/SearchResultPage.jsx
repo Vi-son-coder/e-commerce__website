@@ -9,7 +9,7 @@ export default function SearchResultPage() {
   const { result, keyword } = useSearch();
   const location = useLocation();
   return (
-    <div className="bg-gray-100 min-h-screen pb-10">
+    <div className="search-page">
       <div className="max-w-7xl mx-auto px-4">
         <Breadcrumb />
 
@@ -19,7 +19,7 @@ export default function SearchResultPage() {
 
         <FilterChips />
 
-        <div className="flex space-x-4 mt-4">
+        <div className="search-results-layout flex space-x-4 mt-4">
           {/* Cột trái: Filter */}
           <SidebarFilter key={location.search} />
 
@@ -28,7 +28,7 @@ export default function SearchResultPage() {
             <SortBar />
 
             {/* Product Grid */}
-            <div className="gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
+            <div className="market-results-grid gap-4 grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
               {result?.map(({ _id, ...p }) => (
                 <Product
                   key={_id}

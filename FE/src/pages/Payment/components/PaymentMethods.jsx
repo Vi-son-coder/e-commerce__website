@@ -11,7 +11,7 @@ export default function PaymentMethods() {
   ];
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mt-3">
+    <div className="checkout-card checkout-payment-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 mt-3">
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-bold text-gray-800 uppercase text-sm flex items-center gap-2">
           💳 PHƯƠNG THỨC THANH TOÁN

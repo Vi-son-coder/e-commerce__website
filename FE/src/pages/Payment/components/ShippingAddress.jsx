@@ -2,7 +2,7 @@
 
 export default function ShippingAddress() {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
+    <div className="checkout-card checkout-address-card bg-white rounded-xl p-4 shadow-sm border border-gray-100 mb-4">
       <div className="flex justify-between items-center mb-3">
         <div className="flex items-center gap-2">
           <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -18,8 +18,8 @@ export default function ShippingAddress() {
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-medium text-blue-600">
-          <button className="hover:underline flex items-center gap-1">Thay đổi</button>
-          <button className="hover:underline flex items-center gap-1">+ Thêm mới</button>
+          <button className="!bg-white hover:underline flex items-center gap-1">Thay đổi</button>
+          <button className="!bg-white hover:underline flex items-center gap-1">+ Thêm mới</button>
         </div>
       </div>
 
