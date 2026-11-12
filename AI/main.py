@@ -19,7 +19,17 @@ app = FastAPI(title="NCF Recommendation AI Service")
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
 client = MongoClient(MONGO_URI)
 db = client["products"]
+try:
+    # Khởi tạo client với timeout 5 giây để không bị treo nếu mất kết nối
+    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    
+    # Gửi lệnh ping tới server để xác thực kết nối thực tế
+    client.admin.command('ping')
+    print("Kết nối MongoDB thành công!")
 
+except (ConnectionFailure, ServerSelectionTimeoutError) as e:
+    print(f"Lỗi: Không thể kết nối đến MongoDB. Chi tiết: {e}")
+    
 users_collection = db["users"]
 user_behavior_collection = db["User_behavior"]
 products_collection = db["products"]

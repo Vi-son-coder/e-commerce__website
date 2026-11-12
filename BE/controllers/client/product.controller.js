@@ -48,11 +48,11 @@ module.exports.getFrequentlyBoughtTogether = async (req, res) => {
   try {
     const productId = req.params.productId;
     console.log(req);
-
     // Gọi thẳng vào cổng 8000 của Python FastAPI mà bạn vừa test ở trên
     const pythonResponse = await axios.get(
       `http://localhost:8000/recommendations/bought-together/${productId}`,
     );
+  console.log("Kiểm tra kết nối cơ sở dữ liệu ở backend và qua endpoint của dịch vụ AI:", pythonResponse);
 
     // Trả kết quả nhận được từ Python về cho Frontend (React)
     return res.status(200).json(pythonResponse.data);
