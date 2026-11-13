@@ -8,7 +8,7 @@ import TitleOfAIRecomment from "../../../components/CustomComponent/TitleContain
 import TitleOfTrendind from "../../../components/CustomComponent/TitleContainerContent/TitleOfTrendind/TitleOfTrendind";
 import TitleOfSuggestion from "../../../components/CustomComponent/TitleContainerContent/TitleOfSuggestion/TitleOfSuggestion";
 import { useProducts } from "../../../hooks/useProducts";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { request } from "../../../api/request.api";
 import { AUTH_CHANGED_EVENT } from "../../../services/auth.storage";
@@ -264,18 +264,6 @@ function Content() {
       window.removeEventListener(AUTH_CHANGED_EVENT, refreshRecommendations);
   }, []);
 
-  const categorySectionRef = useRef(null);
-  const location = useLocation();
-  const search = new URLSearchParams(location.search);
-  const hasQuerry = search.get("category");
-  useEffect(() => {
-    if (categorySectionRef.current && hasQuerry) {
-      categorySectionRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }, [hasQuerry]);
   return (
     <>
       <div className="market-home">
@@ -344,7 +332,7 @@ function Content() {
               {visualCategories.map((item) => (
                 <Link
                   key={item.key}
-                  to={`/category?category=${item.key}`}
+                  to={`/category?category=${encodeURIComponent(item.key)}&categoryName=${encodeURIComponent(item.title)}`}
                   aria-label={item.title}
                 >
                   <span className="market-category-image">
@@ -568,15 +556,13 @@ function Content() {
               setShowAllSuggested(false);
             }}
           />
-          <div ref={categorySectionRef}>
-            <Outlet
-              context={{
-                selectedSuggestedCategory,
-                recommendationRefresh,
-                showAllSuggested,
-              }}
-            />
-          </div>
+          <Outlet
+            context={{
+              selectedSuggestedCategory,
+              recommendationRefresh,
+              showAllSuggested,
+            }}
+          />
           <div className="flex justify-center">
             <div className="flex items-center gap-2 bg-white p-[10px_40px] rounded-[7px]">
               <button

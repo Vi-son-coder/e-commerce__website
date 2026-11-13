@@ -23,12 +23,9 @@ function App() {
           {/*index: Trang chủ mặc định -> rơi vào vị trí Outlet */}
           <Route path="/" element={<Content />}>
             <Route index element={<ProductsSuggested />} />
-            <Route
-              path="category"
-              element={<CatgoryFilter/>}
-            />
           </Route>
 
+          <Route path="category" element={<CatgoryFilter />} />
           <Route path="SearchResultPage" element={<SearchResultPage />} />
           <Route path="ProductDetailPage" element={<ProductDetailPage />} />
           <Route path="CartPage/*" element={<CartPage />} />

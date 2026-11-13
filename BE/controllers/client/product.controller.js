@@ -111,7 +111,17 @@ module.exports.search = async (req, res) => {
     find.brand = new RegExp(escapedBrand, "i");
   }
 
-  if (req.query.category) find.category = req.query.category;
+  const category = String(req.query.category || "").trim();
+  const categoryName = String(req.query.categoryName || "").trim();
+  const categoryTerms = [...new Set([category, categoryName].filter(Boolean))];
+  if (categoryTerms.length) {
+    find.category = {
+      $in: categoryTerms.map((term) => {
+        const escapedTerm = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        return new RegExp(`^${escapedTerm}$`, "i");
+      }),
+    };
+  }
 
   const minPrice = Number(req.query.minPrice);
   const maxPrice = Number(req.query.maxPrice);
