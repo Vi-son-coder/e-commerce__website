@@ -48,7 +48,7 @@ module.exports.register = async (req, res) => {
     .toLowerCase();
   const password = String(req.body.password || "");
 
-  if (!name || name.length > 100) {
+  if (!name || name.length > 40) {
     return res.status(400).json({ message: "Vui lòng nhập họ tên hợp lệ" });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {

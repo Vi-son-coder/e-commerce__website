@@ -75,7 +75,7 @@ export default function CartPage() {
                     Đăng nhập hoặc tạo tài khoản để lưu sản phẩm trong giỏ hàng.
                   </p>
                   <Link
-                    className="mt-5 inline-flex rounded-lg bg-red-500 px-5 py-3 font-semibold text-white no-underline hover:bg-red-600"
+                    className="mt-5 inline-flex rounded-lg bg-red-500 px-5 py-3 font-semibold !text-white no-underline hover:bg-red-600"
                     to="/login?redirect=%2FCartPage"
                   >
                     Đăng nhập

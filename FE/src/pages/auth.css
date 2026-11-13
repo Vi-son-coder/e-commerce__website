@@ -78,6 +78,16 @@
   box-shadow: 0 0 0 3px rgb(245 61 45 / 12%);
 }
 
+.auth-form input[aria-invalid="true"] {
+  border-color: #c62828;
+}
+
+.auth-field-error {
+  color: #c62828;
+  font-size: 12px;
+  font-weight: 400;
+}
+
 .auth-error {
   margin: 0;
   color: #c62828;

@@ -674,7 +674,7 @@ a {
   height: auto !important;
   padding: 28px !important;
   color: var(--nova-muted) !important;
-  text-align: center;
+  text-align: center !important;
 }
 
 .cart-page [class~="lg:col-span-4"] {
