@@ -1,0 +1,7 @@
+fastapi
+mlxtend>=0.25.0
+numpy
+pandas
+pymongo
+torch
+uvicorn[standard]

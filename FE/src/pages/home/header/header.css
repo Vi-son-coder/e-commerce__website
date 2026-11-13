@@ -1,0 +1,364 @@
+.market-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: linear-gradient(180deg, #f53d2d, #f63d2e);
+  color: #fff;
+  box-shadow: 0 3px 10px rgb(83 28 18 / 17%);
+  transition: transform 220ms ease;
+}
+
+.market-header--hidden {
+  transform: translateY(-100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market-header {
+    transition: none;
+  }
+}
+
+.market-shell {
+  width: min(100% - 40px, 1280px);
+  margin-inline: auto;
+}
+
+.market-topbar {
+  border-bottom: 1px solid rgb(255 255 255 / 12%);
+  background: transparent;
+  color: #fff;
+  font-size: 12px;
+}
+
+.market-topbar-inner,
+.market-top-links {
+  display: flex;
+  align-items: center;
+}
+
+.market-topbar-inner {
+  min-height: 34px;
+  justify-content: space-between;
+}
+
+.market-top-links {
+  gap: 17px;
+}
+
+.market-top-links a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 150ms ease;
+}
+
+.market-top-links a:hover {
+  opacity: 0.76;
+}
+
+.market-logout {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.market-logout:hover {
+  opacity: 0.76;
+}
+
+.market-header-main {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) max-content;
+  align-items: center;
+  gap: 24px;
+  padding-block: 14px 12px;
+}
+
+.market-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.market-brand img {
+  width: 52px;
+  height: 52px;
+  border: 0;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: none;
+}
+
+.market-brand-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.market-brand-copy strong {
+  color: #fff;
+  font-size: 26px;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.market-brand-copy small {
+  color: rgb(255 255 255 / 83%);
+  font-size: 11px;
+}
+
+.market-search-area {
+  min-width: 0;
+}
+
+.market-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border: 0;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgb(100 22 12 / 18%);
+}
+
+.market-search:focus-within {
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 30%);
+}
+
+.market-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #292b3b;
+  font-size: 14px;
+}
+
+.market-search input::placeholder {
+  color: #9698a7;
+}
+
+.market-search button {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 38px;
+  padding-inline: 20px;
+  border: 0;
+  border-radius: 2px;
+  background: #f53d2d;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.market-search button:hover {
+  background: #e12d1c;
+}
+
+.market-search button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.market-search-suggestions {
+  display: flex;
+  gap: 16px;
+  overflow: hidden;
+  padding: 6px 4px 0;
+  white-space: nowrap;
+}
+
+.market-search-suggestions a {
+  color: rgb(255 255 255 / 91%);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.market-search-suggestions a:hover {
+  color: rgb(255 255 255 / 70%);
+}
+
+.market-cart {
+  display: flex;
+  width: max-content;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  justify-self: end;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+}
+
+.market-cart-icon {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 31px;
+}
+
+.market-cart-icon svg {
+  width: 31px;
+  height: 31px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.market-cart-icon > span {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  display: grid;
+  min-width: 18px;
+  height: 18px;
+  padding-inline: 4px;
+  place-items: center;
+  border: 1px solid #f53d2d;
+  border-radius: 50%;
+  background: #fff;
+  color: #f53d2d;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.market-category-bar {
+  border-top: 1px solid #eee;
+  background: #fff;
+  color: #383838;
+}
+
+.market-category-inner {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  gap: 24px;
+}
+
+.market-all-categories,
+.market-category-links a,
+.market-ai-link {
+  color: #464646;
+  font-size: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.market-all-categories {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-weight: 700;
+}
+
+.market-all-categories span {
+  color: #f53d2d;
+  font-size: 18px;
+}
+
+.market-category-links {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 22px;
+  overflow: auto;
+  scrollbar-width: none;
+}
+
+.market-category-links a:hover,
+.market-ai-link {
+  color: #f53d2d;
+}
+
+.market-ai-link {
+  font-weight: 650;
+}
+
+@media (max-width: 900px) {
+  .market-header-main {
+    grid-template-columns: 175px minmax(0, 1fr) max-content;
+    gap: 16px;
+  }
+
+  .market-top-links {
+    gap: 12px;
+  }
+
+  .market-search-suggestions,
+  .market-ai-link {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .market-shell {
+    width: min(100% - 24px, 1280px);
+  }
+
+  .market-topbar-inner {
+    justify-content: flex-end;
+  }
+
+  .market-top-links:first-child,
+  .market-top-links a:nth-child(2),
+  .market-top-links a:nth-child(3) {
+    display: none;
+  }
+
+  .market-header-main {
+    grid-template-columns: 1fr auto;
+    gap: 10px 14px;
+    padding-block: 10px;
+  }
+
+  .market-brand img {
+    width: 42px;
+    height: 42px;
+    border-radius: 5px;
+  }
+
+  .market-brand-copy strong {
+    font-size: 22px;
+  }
+
+  .market-search-area {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .market-search button {
+    min-height: 38px;
+    padding-inline: 13px;
+  }
+
+  .market-search button span,
+  .market-cart > div > span:last-child {
+    display: none;
+  }
+
+  .market-category-inner {
+    gap: 14px;
+  }
+
+  .market-category-links {
+    gap: 16px;
+  }
+}
