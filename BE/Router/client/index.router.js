@@ -5,7 +5,6 @@ const trackingRouter = require('./tracking.router')
 module.exports = (app) => {
     app.use('/products',productRouter);
     app.use('/',homeRouter);
-    
     app.use('/users',usersRouter);
     app.use('/api',trackingRouter);
 }

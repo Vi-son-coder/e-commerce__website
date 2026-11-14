@@ -8,9 +8,7 @@ const routerAdmin = require("./Router/admin/index.router");
 
 const app = express();
 const port = 3000;
-
 app.use(cors());
-
 app.use(express.json());
 
 routerAdmin(app);
